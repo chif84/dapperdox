@@ -66,7 +66,7 @@ func main() {
 	}
 
 	router := pat.New()
-	chain := alice.New(logger.Handler /*, context.ClearHandler*/, timeoutHandler, withCsrf, injectHeaders).Then(router)
+	chain := alice.New(logger.Handler /*, context.ClearHandler*/, /*timeoutHandler,*/ withCsrf, injectHeaders).Then(router)
 
 	logger.Infof(nil, "listening on %s", cfg.BindAddr)
 	listener, err := net.Listen("tcp", cfg.BindAddr)
@@ -135,7 +135,7 @@ func withCsrf(h http.Handler) http.Handler {
 // ---------------------------------------------------------------------------
 func timeoutHandler(h http.Handler) http.Handler {
 	return timeout.Handler(h, 1*time.Second, http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		logger.Warnln(req, "request timed out")
+		logger.Warnln(req, "request timed out. path=" + req.URL.Path)
 		render.HTML(w, http.StatusRequestTimeout, "error", map[string]interface{}{"error": "Request timed out"})
 	}))
 }
