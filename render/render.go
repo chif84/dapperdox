@@ -180,7 +180,7 @@ func overlay(name string, data []interface{}) template.HTML { // TODO Will be sp
 
 		r := New()
 		// data is a single item array (though I've not figured out why yet!)
-		r.HTML(writer, http.StatusOK, overlay, data[0], render.HTMLOptions{Layout: ""})
+		r.HTML(writer, http.StatusOK, overlay, data[0], render.HTMLOptions{Layout: "overlay-layout"})
 		writer.Flush()
 	}
 
