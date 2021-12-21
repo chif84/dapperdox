@@ -341,8 +341,10 @@ func (c *APISpecification) Load(specLocation string, specHost string) error {
 	c.getDefaultSecurity(apispec)
 
 	methodNavByName := false // Should methods in the navigation be presented by type (GET, POST) or name (string)?
-	if byname, ok := apispec.Extensions["x-navigateMethodsByName"].(bool); ok {
-		methodNavByName = byname
+
+	cfg, err := config.Get()
+	if err == nil && cfg != nil {
+		methodNavByName = cfg.NavigateMethodsByName
 	}
 
 	var methodSortBy []string
