@@ -659,7 +659,7 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 
 	sortkey := api.getMethodSortKey(path, methodname, operationName, navigationName, o.Summary)
 
-	description := "";
+	description := ""
 	if o.Description != o.Summary {
 		description = string(github_flavored_markdown.Markdown([]byte(o.Description)))
 	}
@@ -730,6 +730,11 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 				logger.Errorf(nil, "Error: 'in body' parameter %s is missing a schema declaration.\n", param.Name)
 				os.Exit(1)
 			}
+
+			if param.Schema.Title == "" {
+				param.Schema.Title = method.Name
+			}
+
 			var body map[string]interface{}
 			p.Resource, body, p.IsArray = c.resourceFromSchema(param.Schema, method, nil, true)
 			p.Resource.Schema = jsonResourceToString(body, p.IsArray)
@@ -793,6 +798,11 @@ func (c *APISpecification) buildResponse(resp *spec.Response, method *Method, ve
 		var example_json map[string]interface{}
 
 		if resp.Schema != nil {
+
+			if resp.Schema.Title == "" {
+				resp.Schema.Title = resp.Description
+			}
+
 			r, example_json, is_array = c.resourceFromSchema(resp.Schema, method, nil, false)
 
 			if r != nil {
