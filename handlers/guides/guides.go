@@ -175,6 +175,7 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 	// See if guide has been marked up with nagivation metadata...
 	hierarchy := asset.MetaData(path, "Navigation")
 	sortOrder := asset.MetaData(path, "SortOrder")
+	title := asset.MetaData(path, "Title")
 
 	if len(hierarchy) > 0 {
 		logger.Tracef(nil, "      * Got navigation metadata %s for file %s\n", hierarchy, path)
@@ -183,13 +184,24 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 		hierarchy = strings.TrimPrefix(strings.TrimSuffix(path, ext), path_base+"/")
 		logger.Tracef(nil, "      * No navigation metadata for "+hierarchy+". Using path")
 	}
-
 	// Break hierarchy into bits
-	split := strings.Split(hierarchy, "/")
-	parts := len(split)
+	splitName := strings.Split(hierarchy, "/")
+	partsName := len(splitName)
 
-	if parts > 2 {
-		logger.Errorf(nil, "Error: Guide '"+hierarchy+"' contains too many nagivation levels (%d)", parts)
+	if (strings.TrimSpace(title) == "") {
+		title = hierarchy
+	}
+
+	splitTitle := strings.Split(title, "/")
+	partsTitle := len(splitTitle)
+
+	if partsTitle > 0 && (partsName != partsTitle) {
+		logger.Errorf(nil, "Error: Guide '"+hierarchy+"' contains (%d) parts of Name and (%d) parts of Title", partsName, partsTitle)
+		os.Exit(1)
+	}
+
+	if partsName > 2 {
+		logger.Errorf(nil, "Error: Guide '"+hierarchy+"' contains too many nagivation levels (%d)", partsName)
 		os.Exit(1)
 	}
 
@@ -201,13 +213,18 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 	currentList := &nav.Children
 
 	// Build tree for this navigation item
-	for i := range split {
+	for i := range splitName {
 
-		name := split[i]
+		name := splitName[i]
 		id := strings.Replace(strings.ToLower(name), " ", "-", -1)
 		id = strings.Replace(id, ".", "-", -1)
 
-		if i < parts-1 {
+		titleOrName := name
+		if partsTitle > 0 {
+			titleOrName = splitTitle[i]
+		}
+
+		if i < partsName-1 {
 			// Have we already created this branch node?
 			if currentItem, ok := current[id]; !ok {
 				// create new branch node
@@ -215,6 +232,7 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 					Id:        id,
 					SortOrder: sortOrder,
 					Name:      name,
+					Title:     titleOrName,
 					ChildMap:  make(map[string]*navigation.NavigationNode),
 					Children:  make([]*navigation.NavigationNode, 0),
 				}
@@ -238,6 +256,7 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 					SortOrder: sortOrder,
 					Uri:       route,
 					Name:      name,
+					Title:     titleOrName,
 					ChildMap:  make(map[string]*navigation.NavigationNode),
 					Children:  make([]*navigation.NavigationNode, 0),
 				}
