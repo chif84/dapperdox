@@ -19,9 +19,9 @@ package spec
 
 import (
 	"bytes"
-	"dapperbox/config"
-	"dapperbox/logger"
-	"dapperbox/translit"
+	"dapperdox/config"
+	"dapperdox/logger"
+	"dapperdox/translit"
 	"encoding/json"
 	"fmt"
 	"github.com/go-openapi/loads"

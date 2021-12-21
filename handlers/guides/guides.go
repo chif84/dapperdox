@@ -25,11 +25,11 @@ import (
 	"sort"
 	"strings"
 
-	"dapperbox/logger"
-	"dapperbox/navigation"
-	"dapperbox/render"
-	"dapperbox/render/asset"
-	"dapperbox/spec"
+	"dapperdox/logger"
+	"dapperdox/navigation"
+	"dapperdox/render"
+	"dapperdox/render/asset"
+	"dapperdox/spec"
 	"github.com/gorilla/pat"
 )
 

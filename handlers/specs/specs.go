@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package specs
 
 import (
-	"dapperbox/config"
-	"dapperbox/logger"
+	"dapperdox/config"
+	"dapperdox/logger"
 	"io/ioutil"
 	"net/http"
 	"os"

@@ -19,8 +19,8 @@ package network
 
 import (
 	"crypto/tls"
-	"dapperbox/config"
-	"dapperbox/logger"
+	"dapperdox/config"
+	"dapperdox/logger"
 	"errors"
 	"net"
 )

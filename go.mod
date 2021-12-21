@@ -1,4 +1,4 @@
-module dapperbox
+module dapperdox
 
 go 1.17
 
