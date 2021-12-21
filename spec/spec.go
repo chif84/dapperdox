@@ -634,6 +634,10 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 		operationName = opname
 	}
 
+	if o.Summary == "" {
+		o.Summary = o.Description
+	}
+
 	// Construct an ID for the Method. Choose from operation ID, x-operationName, summary and lastly method name.
 	id := o.ID // OperationID
 	if id == "" {
@@ -655,10 +659,15 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 
 	sortkey := api.getMethodSortKey(path, methodname, operationName, navigationName, o.Summary)
 
+	description := "";
+	if o.Description != o.Summary {
+		description = string(github_flavored_markdown.Markdown([]byte(o.Description)))
+	}
+
 	method := &Method{
 		ID:             CamelToKebab(id),
 		Name:           o.Summary,
-		Description:    string(github_flavored_markdown.Markdown([]byte(o.Description))),
+		Description:    description,
 		Method:         methodname,
 		Path:           path,
 		Responses:      make(map[int]Response),
