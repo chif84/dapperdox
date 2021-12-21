@@ -10,8 +10,8 @@
   ],
   "swagger": "2.0",
   "info": {
+    "description": "Инструментарий для интеграции ELMA365 со сторонними системами.",
     "title": "Публичное API",
-    "description": "API ELMA365 - это инструментарий для интеграции ELMA365 со сторонними системами.",
     "version": "1.0.1.dev"
   },
   "host": "company.elma365.zone",
@@ -19,32 +19,35 @@
   "paths": {
     "/app/{namespace}/{code}/create": {
       "post": {
-        "description": "Создание элемента Приложения",
-        "summary": "Создание элемента Приложения",
+        "description": "Получение элемента Приложения по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
         "operationId": "appItemCreate",
-        "tags": [ "app" ],
         "parameters": [
           {
             "type": "string",
             "x-go-name": "Namespace",
             "description": "Код Раздела",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "Code",
             "description": "Код Приложения Раздела",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "AppItemCreateBody",
               "type": "object",
               "properties": {
                 "context": {
@@ -70,41 +73,143 @@
         "responses": {
           "200": {
             "$ref": "#/responses/AppItemCreateResponse"
+          }
+        }
+      }
+    },
+    "/app/{namespace}/{code}/get": {
+      "get": {
+        "description": "Получение элемента Приложения по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appGetGET",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Код раздела",
+            "name": "namespace",
+            "in": "path",
+            "required": true
           },
-          "400": {
-            "$ref": "#/responses/AppItemCreateResponse"
+          {
+            "type": "string",
+            "description": "Код приложения",
+            "name": "code",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AppGetResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Получение элемента Приложения по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appGet",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Код раздела",
+            "name": "namespace",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Код приложения",
+            "name": "code",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AppGetResponse"
           }
         }
       }
     },
     "/app/{namespace}/{code}/list": {
+      "get": {
+        "description": "Получение списка элементов Приложения",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appListGET",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Код раздела",
+            "name": "namespace",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Код приложения",
+            "name": "code",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Параметры запроса списка, в форме JSON сериализованной строки",
+            "name": "listparams",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/AppListResponse"
+          }
+        }
+      },
       "post": {
         "description": "Получение списка элементов Приложения",
-        "summary": "Получение списка элементов Приложения",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
         "operationId": "appList",
-        "tags": [ "app" ],
         "parameters": [
           {
             "type": "string",
             "x-go-name": "Namespace",
             "description": "Код Раздела",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "Code",
             "description": "Код Приложения",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "AppListBody",
               "type": "object",
               "properties": {
                 "active": {
@@ -166,50 +271,125 @@
         "responses": {
           "200": {
             "$ref": "#/responses/AppListResponse"
+          }
+        }
+      }
+    },
+    "/app/{namespace}/{code}/settings/status": {
+      "get": {
+        "description": "Получение статуса Приложения",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appGetStatus",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Код раздела",
+            "name": "namespace",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Код приложения",
+            "name": "code",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/appGetStatusResponse"
           },
           "400": {
-            "$ref": "#/responses/AppListResponse"
+            "$ref": "#/responses/appGetStatusResponse"
           }
         }
       }
     },
     "/app/{namespace}/{code}/{id}/get": {
-      "post": {
+      "get": {
         "description": "Получение элемента Приложения по идентификатору",
-        "summary": "Получение элемента Приложения по идентификатору",
-        "operationId": "appItemGet",
-        "tags": [ "app" ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appItemGetGET",
         "parameters": [
           {
             "type": "string",
             "x-go-name": "Namespace",
             "description": "Код Раздела",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "Code",
             "description": "Код Приложения Раздела",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "ID",
             "description": "Идентификатор элемента Приложения",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "$ref": "#/responses/AppItemGetResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Получение элемента Приложения по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
+        "operationId": "appItemGet",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "Namespace",
+            "description": "Код Раздела",
+            "name": "namespace",
+            "in": "path",
+            "required": true
           },
-          "400": {
+          {
+            "type": "string",
+            "x-go-name": "Code",
+            "description": "Код Приложения Раздела",
+            "name": "code",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "Идентификатор элемента Приложения",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
             "$ref": "#/responses/AppItemGetResponse"
           }
         }
@@ -217,44 +397,47 @@
     },
     "/app/{namespace}/{code}/{id}/set-status": {
       "post": {
-        "description": "Установка статуса элемента",
-        "summary": "Установка статуса элемента",
+        "description": "Установка статуса элемента приложения",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
         "operationId": "appItemSetStatus",
-        "tags": [ "app" ],
         "parameters": [
           {
             "type": "string",
             "x-go-name": "Namespace",
             "description": "Код Раздела",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "Code",
             "description": "Код Приложения Раздела",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "ID",
             "description": "Идентификатор элемента",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "AppItemSetStatusBody",
               "type": "object",
               "properties": {
                 "status": {
-                  "description": "Параметры нового статуса",
+                  "description": "Пареметры нового статуса",
                   "type": "object",
                   "properties": {
                     "code": {
@@ -272,9 +455,6 @@
         "responses": {
           "200": {
             "$ref": "#/responses/AppItemSetStatusResponse"
-          },
-          "400": {
-            "$ref": "#/responses/AppItemSetStatusResponse"
           }
         }
       }
@@ -282,39 +462,42 @@
     "/app/{namespace}/{code}/{id}/update": {
       "post": {
         "description": "Изменение элемента Приложения",
-        "summary": "Изменение элемента Приложения",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "app"
+        ],
         "operationId": "appItemUpdate",
-        "tags": [ "app" ],
         "parameters": [
           {
             "type": "string",
             "x-go-name": "Namespace",
             "description": "Код Раздела",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "Code",
             "description": "Код Приложения Раздела",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
             "x-go-name": "ID",
             "description": "Идентификатор элемента",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "AppItemUpdateBody",
               "type": "object",
               "properties": {
                 "context": {
@@ -332,25 +515,49 @@
         "responses": {
           "200": {
             "$ref": "#/responses/AppItemUpdateResponse"
-          },
-          "400": {
-            "$ref": "#/responses/AppItemUpdateResponse"
           }
         }
       }
     },
     "/bpm/instance/bytarget/list": {
+      "get": {
+        "description": "Получить список экземпляров процесса для цели",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bpmInstanceTargetListGET",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Параметры запроса списка, в форме JSON сериализованной строки",
+            "name": "listparams",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/BpmInstanceTargetListResponse"
+          }
+        }
+      },
       "post": {
         "description": "Получить список экземпляров процесса для цели",
-        "summary": "Получить список экземпляров процесса для цели",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
         "operationId": "bpmInstanceTargetList",
-        "tags": [ "bpm" ],
         "parameters": [
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "BpmInstanceTargetListBody",
               "type": "object",
               "properties": {
                 "active": {
@@ -390,32 +597,64 @@
         "responses": {
           "200": {
             "$ref": "#/responses/BpmInstanceTargetListResponse"
-          },
-          "400": {
-            "$ref": "#/responses/BpmInstanceTargetListResponse"
           }
         }
       }
     },
     "/bpm/instance/bytemplateid/{id}/list": {
-      "post": {
+      "get": {
         "description": "Получить список экземпляров процесса",
-        "summary": "Получить список экземпляров процесса",
-        "operationId": "bmpInstanceList",
-        "tags": [ "bpm" ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bpmInstanceListGET",
         "parameters": [
           {
             "type": "string",
+            "description": "Идентификатор шаблона процесса",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Параметры запроса списка, в форме JSON сериализованной строки, аналогично POST варианту запроса.",
+            "name": "listparams",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/BpmInstanceListResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Получить список экземпляров процесса",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bmpInstanceList",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
             "description": "Идентифкатор шаблона",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "BmpInstanceListBody",
               "type": "object",
               "properties": {
                 "active": {
@@ -466,33 +705,57 @@
         "responses": {
           "200": {
             "$ref": "#/responses/BpmInstanceListResponse"
-          },
-          "400": {
-            "$ref": "#/responses/BpmInstanceListResponse"
           }
         }
       }
     },
     "/bpm/instance/{id}/get": {
-      "post": {
+      "get": {
         "description": "Получение экземпляра процесса по идентификатору",
-        "summary": "Получение экземпляра процесса по идентификатору",
-        "operationId": "bpmInstanceGet",
-        "tags": [ "bpm" ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bpmInstanceGetGET",
         "parameters": [
           {
             "type": "string",
+            "x-go-name": "ID",
             "description": "Идентификатор экземпляра процесса",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "$ref": "#/responses/BpmInstanceGetResponse"
-          },
-          "400": {
+          }
+        }
+      },
+      "post": {
+        "description": "Получение экземпляра процесса по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bpmInstanceGet",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "Идентификатор экземпляра процесса",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
             "$ref": "#/responses/BpmInstanceGetResponse"
           }
         }
@@ -501,22 +764,26 @@
     "/bpm/restore-point/{id}/restore": {
       "post": {
         "description": "Продолжения делегированного действия по идентификатору",
-        "summary": "Продолжения делегированного действия по идентификатору",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
         "operationId": "bpmRestorePointRestore",
-        "tags": [ "bpm" ],
         "parameters": [
           {
             "type": "string",
+            "x-go-name": "ID",
             "description": "Идентификатор точки восстановления",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "BpmRestorePointRestoreBody",
               "type": "object",
               "properties": {
                 "data": {
@@ -531,9 +798,6 @@
         "responses": {
           "200": {
             "$ref": "#/responses/BpmRestorePointRestoreResponse"
-          },
-          "400": {
-            "$ref": "#/responses/BpmRestorePointRestoreResponse"
           }
         }
       }
@@ -541,22 +805,15 @@
     "/bpm/template/list": {
       "post": {
         "description": "Получение списка опубликованных процессов в разделе",
-        "summary": "Получение списка опубликованных процессов в разделе",
-        "operationId": "bpmTemplateList",
-        "tags": [ "bpm" ],
-        "parameters": [
-          {
-            "type": "string",
-            "description": "Код раздела",
-            "name": "Namespace",
-            "in": "query"
-          }
+        "produces": [
+          "application/json"
         ],
+        "tags": [
+          "bpm"
+        ],
+        "operationId": "bpmTemplateList",
         "responses": {
           "200": {
-            "$ref": "#/responses/BpmTemplateListResponse"
-          },
-          "400": {
             "$ref": "#/responses/BpmTemplateListResponse"
           }
         }
@@ -565,29 +822,34 @@
     "/bpm/template/{namespace}/{code}/run": {
       "post": {
         "description": "Запуск процесса по идентификатору шаблона",
-        "summary": "Запуск процесса по идентификатору шаблона",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "bpm"
+        ],
         "operationId": "bpmTemplateRun",
-        "tags": [ "bpm" ],
         "parameters": [
           {
             "type": "string",
+            "x-go-name": "Namespace",
             "description": "Код раздела процесса",
             "name": "namespace",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "type": "string",
+            "x-go-name": "Code",
             "description": "Код процесса",
             "name": "code",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "BpmTemplateRunBody",
               "type": "object",
               "properties": {
                 "context": {
@@ -600,9 +862,6 @@
         "responses": {
           "200": {
             "$ref": "#/responses/BpmTemplateRunResponse"
-          },
-          "400": {
-            "$ref": "#/responses/BpmTemplateRunResponse"
           }
         }
       }
@@ -610,28 +869,29 @@
     "/disk/directory/{id}/upload": {
       "post": {
         "description": "Загрузка файла в папку",
-        "summary": "Загрузка файла в папку",
         "consumes": [
           "multipart/form-data"
         ],
         "produces": [
           "application/json"
         ],
+        "tags": [
+          "disk"
+        ],
         "operationId": "diskFileUpload",
-        "tags": [ "disk" ],
         "parameters": [
           {
             "type": "string",
+            "x-go-name": "ID",
             "description": "Идентификатор папки",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           },
           {
             "name": "Body",
             "in": "body",
             "schema": {
-              "title": "DiskFileUploadBody",
               "type": "object",
               "properties": {
                 "file": {
@@ -650,40 +910,207 @@
         "responses": {
           "200": {
             "$ref": "#/responses/DiskFileUploadResponse"
-          },
-          "400": {
-            "$ref": "#/responses/DiskFileUploadResponse"
           }
         }
       }
     },
     "/disk/file/{id}/get-link": {
-      "post": {
+      "get": {
         "description": "Получение ссылки на скачивание файла по идентификатору файла",
-        "summary": "Получение ссылки на скачивание файла по идентификатору файла",
-        "operationId": "handlerGetLink",
-        "tags": [ "disk" ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "disk"
+        ],
+        "operationId": "handlerGetLinkGET",
         "parameters": [
           {
             "type": "string",
+            "x-go-name": "ID",
             "description": "ID - идентификатор файла",
             "name": "id",
-            "required": true,
-            "in": "path"
+            "in": "path",
+            "required": true
           }
         ],
         "responses": {
           "200": {
             "$ref": "#/responses/HandlerGetLinkResponse"
-          },
-          "400": {
+          }
+        }
+      },
+      "post": {
+        "description": "Получение ссылки на скачивание файла по идентификатору файла",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "disk"
+        ],
+        "operationId": "handlerGetLink",
+        "parameters": [
+          {
+            "type": "string",
+            "x-go-name": "ID",
+            "description": "ID - идентификатор файла",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
             "$ref": "#/responses/HandlerGetLinkResponse"
+          }
+        }
+      }
+    },
+    "/help": {
+      "post": {
+        "description": "Вывод документации API в формате OpenAPI (Swagger 2)",
+        "produces": [
+          "application/json"
+        ],
+        "operationId": "help",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/HelpResponse"
+          }
+        }
+      }
+    },
+    "/user/list": {
+      "post": {
+        "description": "Получение ссылки на скачивание файла по идентификатору файла",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "operationId": "user",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "filter": {
+                  "description": "Фильтрация",
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
+                  },
+                  "x-go-name": "Filter"
+                },
+                "from": {
+                  "description": "Начальный индекс (offset) возвращаемых элементов.",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "From"
+                },
+                "ids": {
+                  "description": "Фильтрация по идентификаторам",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "x-go-name": "Ids"
+                },
+                "size": {
+                  "description": "Количество возвращаемых элементов (максимум 100)",
+                  "type": "integer",
+                  "format": "int64",
+                  "x-go-name": "Size"
+                },
+                "sortExpressions": {
+                  "description": "Правила сортировки",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/SortExpression"
+                  },
+                  "x-go-name": "SortExpressions"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ListUserResponse"
           }
         }
       }
     }
   },
   "definitions": {
+    "AppFields": {
+      "description": "easyjson:json",
+      "title": "AppFields описывает массив полей приложения",
+      "$ref": "#/definitions/Fields"
+    },
+    "AppView": {
+      "description": "AppView -\neasyjson:json",
+      "type": "object",
+      "properties": {
+        "__createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "__createdBy": {
+          "$ref": "#/definitions/UUID"
+        },
+        "__deletedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "DeletedAt"
+        },
+        "__id": {
+          "$ref": "#/definitions/UUID"
+        },
+        "__updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "UpdatedAt"
+        },
+        "__updatedBy": {
+          "$ref": "#/definitions/UUID"
+        },
+        "code": {
+          "type": "string",
+          "x-go-name": "Code"
+        },
+        "elementName": {
+          "type": "string",
+          "x-go-name": "ElementName"
+        },
+        "fields": {
+          "$ref": "#/definitions/AppFields"
+        },
+        "filters": {
+          "$ref": "#/definitions/Filters"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "namespace": {
+          "$ref": "#/definitions/Namespace"
+        },
+        "settings": {
+          "type": "object",
+          "x-go-name": "Settings"
+        },
+        "type": {
+          "type": "string",
+          "x-go-name": "Type"
+        }
+      },
+      "x-go-package": "git.elewise.com/elma365/main/internal/app/model"
+    },
     "Field": {
       "description": "easyjson:json\nnolint: maligned // поля сгруппированы по смыслу, поэтому этот линтер отключен",
       "type": "object",
@@ -792,9 +1219,73 @@
       },
       "x-go-package": "git.elewise.com/elma365/common/pkg/types"
     },
+    "Fields": {
+      "description": "easyjson:json",
+      "type": "array",
+      "title": "Fields is slice of fields",
+      "items": {
+        "$ref": "#/definitions/Field"
+      },
+      "x-go-package": "git.elewise.com/elma365/common/pkg/types"
+    },
+    "Filter": {
+      "description": "easyjson:json",
+      "type": "object",
+      "title": "Filter описывает объект фильтра приложения",
+      "properties": {
+        "__createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "__id": {
+          "$ref": "#/definitions/UUID"
+        },
+        "directory": {
+          "$ref": "#/definitions/UUID"
+        },
+        "handlerCode": {
+          "type": "string",
+          "x-go-name": "HandlerCode"
+        },
+        "inTrash": {
+          "type": "boolean",
+          "x-go-name": "InTrash"
+        },
+        "isSystem": {
+          "type": "boolean",
+          "x-go-name": "IsSystem"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name"
+        },
+        "values": {
+          "type": "object",
+          "x-go-name": "Values"
+        },
+        "viewPlace": {
+          "$ref": "#/definitions/ViewPlace"
+        }
+      },
+      "x-go-package": "git.elewise.com/elma365/main/internal/app/model"
+    },
+    "Filters": {
+      "description": "easyjson:json",
+      "type": "array",
+      "title": "Filters описывает массив фильтров приложения",
+      "items": {
+        "$ref": "#/definitions/Filter"
+      },
+      "x-go-package": "git.elewise.com/elma365/main/internal/app/model"
+    },
+    "Namespace": {
+      "description": "Namespace - тип для пространства имен",
+      "type": "string",
+      "x-go-package": "git.elewise.com/elma365/common/pkg/namespace"
+    },
     "Result": {
-      "title": "пропущен title",
-      "description": "Result описывает результат запроса списка элементов",
+      "description": "Result описывает результат запроса списка элементов\neasyjson:json",
       "type": "object",
       "properties": {
         "result": {
@@ -815,7 +1306,6 @@
       "x-go-package": "git.elewise.com/elma365/main/internal/common/list"
     },
     "SortExpression": {
-      "title": "пропущен title",
       "description": "SortExpression contains field name and direction for sorting",
       "type": "object",
       "properties": {
@@ -833,14 +1323,12 @@
       "x-go-package": "git.elewise.com/elma365/main/internal/common/queries"
     },
     "Type": {
-      "title": "пропущен title",
       "description": "Type is an enum of available types",
       "type": "integer",
       "format": "int64",
       "x-go-package": "git.elewise.com/elma365/common/pkg/types"
     },
     "UUID": {
-      "title": "пропущен title",
       "description": "UUID representation compliant with specification\ndescribed in RFC 4122.",
       "type": "array",
       "items": {
@@ -850,28 +1338,47 @@
       "x-go-package": "github.com/satori/go.uuid"
     },
     "ViewPlace": {
-      "title": "пропущен title",
       "description": "ViewPlace место отображения фильтра",
       "type": "integer",
       "format": "int8",
       "x-go-package": "git.elewise.com/elma365/main/internal/app/model"
     },
+    "appGetStatusResponseItem": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "description": "Код варианта статуса.",
+          "type": "string",
+          "x-go-name": "Code"
+        },
+        "id": {
+          "description": "Идентификатор варианта статуса.",
+          "type": "integer",
+          "format": "uint32",
+          "x-go-name": "ID"
+        },
+        "name": {
+          "description": "Наименование варианта статуса.",
+          "type": "string",
+          "x-go-name": "Name"
+        }
+      },
+      "x-go-name": "responseItem",
+      "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/handlers/app"
+    },
     "context": {
-      "title": "пропущен title",
       "description": "Контекст Бизнес-процесса",
       "type": "object",
       "x-go-name": "Context",
       "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/models"
     },
     "data": {
-      "title": "пропущен title",
       "description": "Данные",
       "type": "object",
       "x-go-name": "Data",
       "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/models"
     },
     "file": {
-      "title": "пропущен title",
       "description": "Файл",
       "type": "object",
       "properties": {
@@ -937,7 +1444,6 @@
       "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/models"
     },
     "item": {
-      "title": "пропущен title",
       "description": "Объект",
       "type": "object",
       "additionalProperties": {
@@ -948,9 +1454,30 @@
     }
   },
   "responses": {
-    "AppItemCreateResponse": {
+    "AppGetResponse": {
+      "description": "Модель ответа запрашиваемого приложения.",
       "schema": {
-        "title": "AppItemCreateResponse",
+        "type": "object",
+        "properties": {
+          "application": {
+            "$ref": "#/definitions/AppView"
+          },
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "AppItemCreateResponse": {
+      "description": "Модель ответа создания элемента.",
+      "schema": {
         "type": "object",
         "properties": {
           "error": {
@@ -970,8 +1497,8 @@
       }
     },
     "AppItemGetResponse": {
+      "description": "Модель ответа для запроса элемента приложения.",
       "schema": {
-        "title": "AppItemGetResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -991,8 +1518,8 @@
       }
     },
     "AppItemSetStatusResponse": {
+      "description": "Модель эелемента приложения с установленным статусом.",
       "schema": {
-        "title": "AppItemSetStatusResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1012,8 +1539,8 @@
       }
     },
     "AppItemUpdateResponse": {
+      "description": "Модель измененного элемента.",
       "schema": {
-        "title": "AppItemUpdateResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1033,8 +1560,8 @@
       }
     },
     "AppListResponse": {
+      "description": "Модель списка элементов приложения.",
       "schema": {
-        "title": "AppListResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1054,8 +1581,8 @@
       }
     },
     "BpmInstanceGetResponse": {
+      "description": "Модель экземпляра процесса.",
       "schema": {
-        "title": "BpmInstanceGetResponse",
         "type": "object",
         "properties": {
           "data": {
@@ -1075,8 +1602,8 @@
       }
     },
     "BpmInstanceListResponse": {
+      "description": "Модель списка экземпляров процесса.",
       "schema": {
-        "title": "BpmInstanceListResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1096,8 +1623,8 @@
       }
     },
     "BpmInstanceTargetListResponse": {
+      "description": "Модель списка экземпляров процесса.",
       "schema": {
-        "title": "BpmInstanceTargetListResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1117,8 +1644,8 @@
       }
     },
     "BpmRestorePointRestoreResponse": {
+      "description": "Модель ответа.",
       "schema": {
-        "title": "BpmRestorePointRestoreResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1135,8 +1662,8 @@
       }
     },
     "BpmTemplateListResponse": {
+      "description": "Модель списка опубликованных процессов.",
       "schema": {
-        "title": "BpmTemplateListResponse",
         "type": "object",
         "properties": {
           "context": {
@@ -1156,8 +1683,8 @@
       }
     },
     "BpmTemplateRunResponse": {
+      "description": "Модель контекста запущенного процесса.",
       "schema": {
-        "title": "BpmTemplateRunResponse",
         "type": "object",
         "properties": {
           "context": {
@@ -1177,8 +1704,8 @@
       }
     },
     "DiskFileUploadResponse": {
+      "description": "DiskFileUploadResponse ответ на запрос загрузки файла",
       "schema": {
-        "title": "DiskFileUploadResponse",
         "type": "object",
         "properties": {
           "error": {
@@ -1198,8 +1725,8 @@
       }
     },
     "HandlerGetLinkResponse": {
+      "description": "Модель ссылки для скачивания.",
       "schema": {
-        "title": "HandlerGetLinkResponse",
         "type": "object",
         "properties": {
           "Link": {
@@ -1218,6 +1745,76 @@
           }
         }
       }
+    },
+    "HelpResponse": {
+      "description": "Модель описания API.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "help": {
+            "description": "Документация в формате OpenAPI (Swagger 2)",
+            "type": "object",
+            "x-go-name": "Help"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "ListUserResponse": {
+      "description": "Модель списка пользователей.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "result": {
+            "$ref": "#/definitions/Result"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "appGetStatusResponse": {
+      "description": "Модель ответа запрашиваемого статуса.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "statusItems": {
+            "description": "Варианты статуса.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/appGetStatusResponseItem"
+            },
+            "x-go-name": "StatusItems"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": {
@@ -1225,28 +1822,36 @@
       "type": "apiKey",
       "name": "X-Token",
       "in": "header"
+    },
+    "bearer_token": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   },
   "security": [
     {
       "api_key": []
+    },
+    {
+      "bearer_token": []
     }
   ],
   "tags": [
     {
-      "description": "Работа с app",
+      "description": "Работа с приложениями",
       "name": "app"
     },
     {
-      "description": "Работа с bpm",
+      "description": "Работа с бизнес-процессами",
       "name": "bpm"
     },
     {
-      "description": "Работа с file",
+      "description": "Работа с файлами",
       "name": "disk"
     },
     {
-      "description": "Работа с user",
+      "description": "Работа с пользователями",
       "name": "user"
     }
   ]
