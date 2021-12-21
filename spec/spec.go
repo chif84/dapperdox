@@ -19,21 +19,20 @@ package spec
 
 import (
 	"bytes"
+	"dapperbox/config"
+	"dapperbox/logger"
+	"dapperbox/translit"
 	"encoding/json"
 	"fmt"
+	"github.com/go-openapi/loads"
+	"github.com/go-openapi/spec"
+	"github.com/serenize/snaker"
+	"github.com/shurcooL/github_flavored_markdown"
 	"net/url"
 	"os"
 	"regexp"
 	"sort"
 	"strings"
-
-	"github.com/dapperdox/dapperdox/config"
-	"github.com/dapperdox/dapperdox/logger"
-	//"github.com/davecgh/go-spew/spew"
-	"github.com/go-openapi/loads"
-	"github.com/go-openapi/spec"
-	"github.com/serenize/snaker"
-	"github.com/shurcooL/github_flavored_markdown"
 )
 
 type APISpecification struct {
@@ -386,10 +385,10 @@ func (c *APISpecification) Load(specLocation string, specHost string) error {
 		// If we're grouping by TAGs, then build the API at the tag level
 		if groupingByTag {
 			api = &APIGroup{
-				ID:   TitleToKebab(name),
-				Name: name,
-				URL:  u,
-				Info: &c.APIInfo,
+				ID:                     TitleToKebab(name),
+				Name:                   name,
+				URL:                    u,
+				Info:                   &c.APIInfo,
 				MethodNavigationByName: methodNavByName,
 				MethodSortBy:           methodSortBy,
 				Consumes:               apispec.Consumes,
@@ -407,10 +406,10 @@ func (c *APISpecification) Load(specLocation string, specHost string) error {
 			// If not grouping by tag, then build the API at the path level
 			if !groupingByTag {
 				api = &APIGroup{
-					ID:   TitleToKebab(name),
-					Name: name,
-					URL:  u,
-					Info: &c.APIInfo,
+					ID:                     TitleToKebab(name),
+					Name:                   name,
+					URL:                    u,
+					Info:                   &c.APIInfo,
 					MethodNavigationByName: methodNavByName,
 					MethodSortBy:           methodSortBy,
 					Consumes:               apispec.Consumes,
@@ -1371,6 +1370,7 @@ var kababExclude = regexp.MustCompile("[^\\w\\s]") // Any non word or space char
 
 func TitleToKebab(s string) string {
 	s = strings.ToLower(s)
+	s = translit.Encode(s)
 	s = string(kababExclude.ReplaceAll([]byte(s), []byte("")))
 	s = strings.Replace(s, " ", "-", -1)
 	return s
