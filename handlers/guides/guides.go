@@ -21,6 +21,7 @@ import (
 	//"github.com/davecgh/go-spew/spew"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"sort"
 	"strings"
@@ -30,8 +31,97 @@ import (
 	"dapperdox/render"
 	"dapperdox/render/asset"
 	"dapperdox/spec"
+
 	"github.com/gorilla/pat"
 )
+
+func Render(outputPath string) error {
+
+	logger.Infof(nil, "Registering guides")
+
+	// specification specific guides
+	for _, specification := range spec.APISuite {
+		logger.Debugf(nil, "- Specification guides for '%s'", specification.APIInfo.Title)
+		if err := renderGuides(outputPath, "assets/templates", specification); err != nil {
+			return err
+		}
+	}
+
+	// Top level guides
+	if err := renderGuides(outputPath, "assets/templates", nil); err != nil {
+		return err
+	}
+
+	logger.Debugf(nil, "\n")
+	return nil
+}
+
+func renderGuides(outputPath, base string, specification *spec.APISpecification) error {
+	type renderTask func() error
+
+	root_node := "/guides"
+	route_base := "/guides"
+	if specification != nil {
+		root_node = "/" + specification.ID + "/templates" + root_node
+		route_base = "/" + specification.ID + route_base
+	}
+
+	path_base := base + root_node
+
+	guidesNavigation := &navigation.NavigationNode{}
+
+	guidesNavigation.Children = make([]*navigation.NavigationNode, 0)
+	guidesNavigation.ChildMap = make(map[string]*navigation.NavigationNode)
+
+	logger.Tracef(nil, "  - Walk compiled asset tree %s", path_base)
+
+	var renderTasks []renderTask
+	for _, p := range asset.AssetNames() {
+		if !strings.HasPrefix(p, path_base) { // Only keep assets we want
+			continue
+		}
+		ext := filepath.Ext(p)
+
+		switch ext {
+		case ".tmpl", ".md":
+			logger.Debugf(nil, "    - File "+p)
+
+			// Convert path/filename to route
+			route := route_base + StripBasepathAndExtension(p, path_base)
+			absresource := StripBasepathAndExtension(p, base)
+			resource := strings.TrimPrefix(absresource, "/")
+
+			logger.Tracef(nil, "      = URL  "+route)
+
+			buildNavigation(guidesNavigation, p, path_base, route, ext)
+
+			filePath := path.Join(outputPath, route, "index.html")
+			// Формируем отложенную задачу на рендер, так как глобальные структуры для навигации будут сформированы
+			// позже
+			task := func() error {
+				return render.HTMLFile(
+					filePath,
+					resource,
+					render.DefaultVars(nil, specification, render.Vars{"Guide": resource}),
+				)
+			}
+
+			renderTasks = append(renderTasks, task)
+		}
+	}
+
+	sortNavigation(guidesNavigation)
+
+	// Register the guides navigation with the renderer
+	render.SetGuidesNavigation(specification, &guidesNavigation.Children)
+
+	for _, task := range renderTasks {
+		if err := task(); err != nil {
+			return err
+		}
+	}
+	return nil
+}
 
 // ---------------------------------------------------------------------------
 // Register routes for guide pages
@@ -188,7 +278,7 @@ func buildNavigation(nav *navigation.NavigationNode, path string, path_base stri
 	splitName := strings.Split(hierarchy, "/")
 	partsName := len(splitName)
 
-	if (strings.TrimSpace(title) == "") {
+	if strings.TrimSpace(title) == "" {
 		title = hierarchy
 	}
 

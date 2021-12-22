@@ -22,6 +22,8 @@ import (
 	"bytes"
 	"html/template"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"dapperdox/config"
@@ -30,6 +32,7 @@ import (
 	"dapperdox/render/asset"
 	unrolled "dapperdox/render/unrolled"
 	"dapperdox/spec"
+
 	"github.com/ian-kent/htmlform"
 )
 
@@ -224,6 +227,22 @@ func overlayPaths(name string, datamap map[string]interface{}) []string {
 // HTML is an alias to github.com/unrolled/render1.Render.HTML
 func HTML(w http.ResponseWriter, status int, name string, binding interface{}, htmlOpt ...unrolled.HTMLOptions) {
 	Render.HTML(w, status, name, binding, htmlOpt...)
+}
+
+// HTMLFile renders to file on disk. Creates file and directory in needed.
+func HTMLFile(path string, name string, binding interface{}, htmlOpt ...render.HTMLOptions) error {
+	err := os.MkdirAll(filepath.Dir(path), 0777)
+	if err != nil {
+		return err
+	}
+
+	f, err := os.Create(path)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return Render.HTML(f, http.StatusOK, name, binding, htmlOpt...)
 }
 
 // ----------------------------------------------------------------------------------------
