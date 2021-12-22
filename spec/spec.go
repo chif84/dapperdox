@@ -731,8 +731,17 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 				os.Exit(1)
 			}
 
+			// Если схема тела запроса не именована
 			if param.Schema.Title == "" {
-				param.Schema.Title = method.Name
+				if param.Description != "" {
+					// Пытаемся взять именование из описания параметра
+					param.Schema.Title = fmt.Sprintf("%s (%s)",
+						strings.TrimRight(method.Name, "."),
+						strings.TrimRight(param.Description, "."))
+				} else {
+					param.Schema.Title = fmt.Sprintf("%s (Request)",
+						strings.TrimRight(method.Name, "."))
+				}
 			}
 
 			var body map[string]interface{}
@@ -798,9 +807,17 @@ func (c *APISpecification) buildResponse(resp *spec.Response, method *Method, ve
 		var example_json map[string]interface{}
 
 		if resp.Schema != nil {
-
+			// Если схема тела ответа не именована
 			if resp.Schema.Title == "" {
-				resp.Schema.Title = resp.Description
+				// Пытаемся взять именование из описания ответа
+				if resp.Description != "" {
+					resp.Schema.Title = fmt.Sprintf("%s (%s)",
+						strings.TrimRight(method.Name, "."),
+						strings.TrimRight(resp.Description, "."))
+				} else {
+					resp.Schema.Title = fmt.Sprintf("%s (Response)",
+						strings.TrimRight(method.Name, "."))
+				}
 			}
 
 			r, example_json, is_array = c.resourceFromSchema(resp.Schema, method, nil, false)
