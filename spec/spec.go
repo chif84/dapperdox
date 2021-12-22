@@ -141,6 +141,7 @@ type Method struct {
 	Security        map[string]Security
 	APIGroup        *APIGroup
 	SortKey         string
+	Deprecated      bool
 }
 
 // Parameter represents an API method parameter
@@ -675,6 +676,7 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 		OperationName:  operationName,
 		APIGroup:       api,
 		SortKey:        sortkey,
+		Deprecated:     o.Deprecated,
 	}
 	if len(o.Consumes) > 0 {
 		method.Consumes = o.Consumes
