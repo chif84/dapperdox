@@ -725,6 +725,10 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 			method.FormParams = append(method.FormParams, p)
 		case "path":
 			method.PathParams = append(method.PathParams, p)
+
+			if param.Required == false {
+				param.Required = true
+			}
 		case "body":
 			if param.Schema == nil {
 				logger.Errorf(nil, "Error: 'in body' parameter %s is missing a schema declaration.\n", param.Name)
