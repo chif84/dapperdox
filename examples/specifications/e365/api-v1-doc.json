@@ -1485,6 +1485,76 @@
         }
       }
     },
+    "HelpResponse": {
+      "description": "Модель описания API.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "help": {
+            "description": "Документация в формате OpenAPI (Swagger 2)",
+            "type": "object",
+            "x-go-name": "Help"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "ListUserResponse": {
+      "description": "Модель списка пользователей.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "result": {
+            "$ref": "#/definitions/Result"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "appGetStatusResponse": {
+      "description": "Модель ответа запрашиваемого статуса.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "statusItems": {
+            "description": "Варианты статуса.",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/appGetStatusResponseItem"
+            },
+            "x-go-name": "StatusItems"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
     "AppItemCreateResponse": {
       "description": "Модель ответа создания элемента.",
       "schema": {

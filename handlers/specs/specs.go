@@ -18,19 +18,111 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package specs
 
 import (
-	"dapperdox/config"
-	"dapperdox/logger"
 	"io/ioutil"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"strings"
+
+	"dapperdox/config"
+	"dapperdox/logger"
 
 	"github.com/gorilla/pat"
 )
 
 var specMap map[string][]byte
 var specReplacer *strings.Replacer
+
+// Render renders static version of documentation to directory
+func Render(outputPath string) error {
+
+	cfg, err := config.Get()
+	if err != nil {
+		logger.Errorf(nil, "error configuring app: %s", err)
+	}
+
+	logger.Infof(nil, "Registering specifications")
+
+	if cfg.SpecDir == "" {
+		logger.Infof(nil, "- No local specifications to serve")
+		return nil
+	}
+
+	// Build a replacer to search/replace specification URLs
+	if specReplacer == nil {
+		var replacements []string
+
+		// Configure the replacer with key=value pairs
+		for i := range cfg.SpecRewriteURL {
+
+			slice := strings.Split(cfg.SpecRewriteURL[i], "=")
+
+			switch len(slice) {
+			case 1: // Map between configured URL and site URL
+				replacements = append(replacements, slice[0], cfg.SiteURL)
+			case 2: // Map between configured to=from URL pair
+				replacements = append(replacements, slice...)
+			default:
+				panic("Invalid DocumentWriteUrl - does not contain an = delimited from=to pair")
+			}
+		}
+		specReplacer = strings.NewReplacer(replacements...)
+	}
+
+	base, err := filepath.Abs(filepath.Clean(cfg.SpecDir))
+	if err != nil {
+		logger.Errorf(nil, "Error forming specification path: %s", err)
+	}
+
+	logger.Debugf(nil, "- Scanning base directory %s", base)
+
+	base = filepath.ToSlash(base)
+
+	specMap = make(map[string][]byte)
+
+	err = filepath.Walk(base, func(path string, _ os.FileInfo, _ error) error {
+
+		if path == base {
+			// Nothing to do with this path
+			return nil
+		}
+
+		logger.Debugf(nil, "  - %s", path)
+
+		path = filepath.ToSlash(path)
+		ext := filepath.Ext(path)
+
+		switch ext {
+		case ".json", ".yaml":
+			// Strip base path and file extension
+			route := strings.TrimPrefix(path, base)
+
+			logger.Debugf(nil, "    = URL : %s", route)
+			logger.Tracef(nil, "    + File: %s", path)
+
+			specMap[route], _ = ioutil.ReadFile(path)
+
+			// Replace URLs in document
+			specMap[route] = []byte(specReplacer.Replace(string(specMap[route])))
+		}
+		return nil
+	})
+
+	for k, v := range specMap {
+		dest := path.Join(outputPath, k)
+
+		if err := os.MkdirAll(filepath.Dir(dest), 0777); err != nil {
+			return err
+		}
+
+		if err = ioutil.WriteFile(dest, v, 0644); err != nil {
+			return err
+		}
+	}
+
+	return err
+}
 
 // Register creates routes for each static resource
 func Register(r *pat.Router) {

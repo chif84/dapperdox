@@ -19,13 +19,38 @@ package home
 
 import (
 	"net/http"
+	"path"
 
 	"dapperdox/config"
 	"dapperdox/logger"
 	"dapperdox/render"
 	"dapperdox/spec"
+
 	"github.com/gorilla/pat"
 )
+
+func Render(outputPath string) error {
+	logger.Debugln(nil, "registering handlers for home page")
+
+	count := 0
+	// Homepages for each loaded specification
+	var specification *spec.APISpecification // Ends up being populated with the last spec processed
+
+	for _, specification = range spec.APISuite {
+
+		logger.Tracef(nil, "Build homepage for specification '%s'", specification.ID)
+
+		apiPath := path.Join(outputPath, specification.ID, "/reference/", "index.html")
+		err := renderSummary(apiPath, specification)
+		if err != nil {
+			return err
+		}
+
+		count++
+	}
+
+	return nil
+}
 
 // ----------------------------------------------------------------------------------------
 // Register creates routes for each home handler
@@ -71,6 +96,29 @@ func specificationListHandler(w http.ResponseWriter, req *http.Request) {
 	render.HTML(w, http.StatusOK, "specification_list", render.DefaultVars(req, nil, render.Vars{"Title": "Specifications list", "SpecificationList": true}))
 }
 
+func renderSummary(file string, specification *spec.APISpecification) error {
+	// The default "theme" level reference index page.
+	tmpl := "specification_summary"
+
+	customTmpl := specification.ID + "/specification_summary"
+
+	logger.Tracef(nil, "+ Test for template '%s'", customTmpl)
+
+	if render.TemplateLookup(customTmpl) != nil {
+		tmpl = customTmpl
+	}
+
+	return render.HTMLFile(
+		file,
+		tmpl,
+		render.DefaultVars(
+			nil,
+			specification,
+			render.Vars{"Title": "Specification summary", "SpecificationSummary": true},
+		),
+	)
+}
+
 // ----------------------------------------------------------------------------------------
 func specificationSummaryHandler(specification *spec.APISpecification) func(w http.ResponseWriter, req *http.Request) {
 
@@ -84,6 +132,7 @@ func specificationSummaryHandler(specification *spec.APISpecification) func(w ht
 	if render.TemplateLookup(customTmpl) != nil {
 		tmpl = customTmpl
 	}
+
 	return func(w http.ResponseWriter, req *http.Request) {
 		render.HTML(w, http.StatusOK, tmpl, render.DefaultVars(req, specification, render.Vars{"Title": "Specification summary", "SpecificationSummary": true}))
 	}

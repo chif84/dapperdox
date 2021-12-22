@@ -18,8 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package static
 
 import (
+	"io/ioutil"
 	"mime"
 	"net/http"
+	"os"
+	"path"
 	"path/filepath"
 	"strings"
 
@@ -27,8 +30,61 @@ import (
 	"dapperdox/logger"
 	"dapperdox/render"
 	"dapperdox/render/asset"
+
 	"github.com/gorilla/pat"
 )
+
+func Render(outPath string) error {
+	logger.Debugln(nil, "rendering static content handlers for static package")
+
+	var allow bool
+
+	for _, file := range asset.AssetNames() {
+		mimeType := mime.TypeByExtension(filepath.Ext(file))
+
+		if mimeType == "" {
+			continue
+		}
+
+		logger.Debugf(nil, "Got MIME type: %s", mimeType)
+
+		switch {
+		case strings.HasPrefix(mimeType, "image"),
+			strings.HasPrefix(mimeType, "text/css"),
+			strings.HasSuffix(mimeType, "javascript"):
+			allow = true
+		default:
+			allow = false
+		}
+
+		if allow {
+			// Drop assets/static prefix
+			fromRootPath := strings.TrimPrefix(file, "assets/static")
+			filePath := path.Join(outPath, fromRootPath)
+			bytes, err := asset.Asset(file)
+			if err != nil {
+				return err
+			}
+			if err := copyFile(bytes, filePath); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
+func copyFile(src []byte, dest string) error {
+	if err := os.MkdirAll(filepath.Dir(dest), 0777); err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(dest, src, 0644); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // Register creates routes for each static resource
 func Register(r *pat.Router) {

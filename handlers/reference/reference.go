@@ -19,11 +19,12 @@ package reference
 
 import (
 	"net/http"
-
+	"path"
 	//"github.com/davecgh/go-spew/spew"
 	"dapperdox/logger"
 	"dapperdox/render"
 	"dapperdox/spec"
+
 	"github.com/gorilla/pat"
 )
 
@@ -32,6 +33,68 @@ type versionedResource map[string]*spec.Resource // key is version
 
 var pathVersionMethod map[string]versionedMethod     // Key is path
 var pathVersionResource map[string]versionedResource // Key is path
+
+func Render(outputPath string) error {
+	pathVersionMethod = make(map[string]versionedMethod)
+	pathVersionResource = make(map[string]versionedResource)
+
+	for _, specification := range spec.APISuite {
+
+		spec_id := "/" + specification.ID
+
+		logger.Debugf(nil, "Registering reference for OpenAPI specification '%s'", specification.APIInfo.Title)
+
+		for _, api := range specification.APIs {
+			logger.Debugf(nil, "  - Scanning API [%s] %s", api.ID, api.Name)
+			apiPath := path.Join(outputPath, spec_id, "/reference/", api.ID, "index.html")
+
+			err := renderAPI(apiPath, specification, api)
+			if err != nil {
+				return err
+			}
+
+			version := api.CurrentVersion
+
+			for _, method := range api.Methods {
+				basepath := spec_id + "/reference/" + api.ID
+				methodPath := basepath + "/" + method.ID
+
+				filePath := path.Join(outputPath, methodPath, "index.html")
+
+				logger.Debugf(nil, "    + method %s [%s]", methodPath, method.Name)
+
+				// Add version->method to pathVersionMethod
+				if _, ok := pathVersionMethod[methodPath]; !ok {
+					pathVersionMethod[methodPath] = make(versionedMethod)
+					pathVersionMethod[methodPath][version] = method
+
+					if err := renderMethod(filePath, specification, api, methodPath); err != nil {
+						return err
+					}
+				}
+			}
+		}
+		logger.Debugf(nil, "  - Registering resources")
+		for version, resources := range specification.ResourceList {
+			logger.Debugf(nil, "    - Version %s", version)
+			for id, resource := range resources {
+				resPath := spec_id + "/resources/" + id
+				filePath := path.Join(outputPath, resPath, "index.html")
+				logger.Debugf(nil, "      + resource %s", id)
+				if _, ok := pathVersionResource[resPath]; !ok {
+					pathVersionResource[resPath] = make(versionedResource)
+					pathVersionResource[resPath][version] = resource
+					if err := renderResource(specification, resource, filePath); err != nil {
+						return err
+					}
+				}
+			}
+		}
+	}
+
+	logger.Debugf(nil, "\n")
+	return nil
+}
 
 // Register creates routes for specification resource
 func Register(r *pat.Router) {
@@ -158,6 +221,33 @@ func getResourceVersions(api spec.APIGroup, versions versionedResource) []string
 	return keys
 }
 
+func renderAPI(file string, specification *spec.APISpecification, api spec.APIGroup) error {
+	version := api.CurrentVersion // Get the resource version
+	versions := getAPIVersions(api)
+	methods := getVersionMethod(api, version)
+
+	tmpl := "api"
+	customTmpl := "reference/" + api.ID
+	if render.TemplateLookup(customTmpl) != nil {
+		tmpl = customTmpl
+	}
+
+	logger.Tracef(nil, "-- template: %s  Version %s", tmpl, version)
+
+	return render.HTMLFile(file, tmpl, render.DefaultVars(
+		nil,
+		specification,
+		render.Vars{
+			"Title":         api.Name,
+			"API":           api,
+			"Methods":       methods,
+			"Version":       version,
+			"Versions":      versions,
+			"LatestVersion": api.CurrentVersion,
+		},
+	))
+}
+
 // ------------------------------------------------------------------------------------------------------------
 // APIHandler is a http.Handler for rendering API reference docs
 func APIHandler(specification *spec.APISpecification, api spec.APIGroup) func(w http.ResponseWriter, req *http.Request) {
@@ -180,6 +270,36 @@ func APIHandler(specification *spec.APISpecification, api spec.APIGroup) func(w 
 
 		render.HTML(w, http.StatusOK, tmpl, render.DefaultVars(req, specification, render.Vars{"Title": api.Name, "API": api, "Methods": methods, "Version": version, "Versions": versions, "LatestVersion": api.CurrentVersion}))
 	}
+}
+
+func renderMethod(filepath string, specification *spec.APISpecification, api spec.APIGroup, path string) error {
+	version := api.CurrentVersion
+	versions := getMethodVersions(api, pathVersionMethod[path])
+	method := pathVersionMethod[path][version]
+
+	tmpl := "method"
+	customTmpl := "reference/" + api.ID + "/" + method.ID
+	if render.TemplateLookup(customTmpl) != nil {
+		tmpl = customTmpl
+	}
+
+	logger.Tracef(nil, "-- template: %s  Version %s", tmpl, version)
+
+	method = pathVersionMethod[path][version]
+
+	return render.HTMLFile(filepath, tmpl, render.DefaultVars(
+		nil,
+		specification,
+		render.Vars{
+			"Title":         method.Name,
+			"API":           api,
+			"Method":        method,
+			"Version":       version,
+			"Versions":      versions,
+			"LatestVersion": api.CurrentVersion,
+		},
+	))
+
 }
 
 // ------------------------------------------------------------------------------------------------------------
@@ -252,6 +372,24 @@ func GlobalResourceHandler(specification *spec.APISpecification, path string) fu
 
 		render.HTML(w, http.StatusOK, tmpl, render.DefaultVars(req, specification, render.Vars{"Title": resource.Title, "Resource": resource, "Version": version, "Versions": versions}))
 	}
+}
+
+func renderResource(specification *spec.APISpecification, resource *spec.Resource, filePath string) error {
+	version := "latest"
+
+	tmpl := "resource"
+
+	customTmpl := "resources/" + resource.ID
+
+	if render.TemplateLookup(customTmpl) != nil {
+		tmpl = customTmpl
+	}
+
+	return render.HTMLFile(filePath, tmpl, render.DefaultVars(
+		nil,
+		specification,
+		render.Vars{"Title": resource.Title, "Resource": resource, "Version": version},
+	))
 }
 
 // ------------------------------------------------------------------------------------------------------------
