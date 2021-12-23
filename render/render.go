@@ -111,6 +111,7 @@ func New() *unrolled.Render {
 			"haveTemplate":  func(n string) *template.Template { return TemplateLookup(n) },
 			"overlay":       func(n string, d ...interface{}) template.HTML { return overlay(n, d) },
 			"getAssetPaths": func(s string, d ...interface{}) []string { return getAssetPaths(s, d) },
+			"locale":        func(a string) string { return spec.GetLocales(a) },
 		}},
 	})
 }
