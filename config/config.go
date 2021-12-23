@@ -25,6 +25,8 @@ import (
 	"github.com/ian-kent/gofigure"
 )
 
+const DefaultLocale = "en-US"
+
 type config struct {
 	gofigure              interface{} `order:"env,flag"`
 	BindAddr              string      `env:"BIND_ADDR" flag:"bind-addr" flagDesc:"Bind address"`
@@ -44,6 +46,7 @@ type config struct {
 	TLSCertificate        string      `env:"TLS_CERTIFICATE" flag:"tls-certificate" flagDesc:"The fully qualified path to the TLS certificate file. For HTTP over TLS (HTTPS) both a certificate and a key must be provided."`
 	TLSKey                string      `env:"TLS_KEY" flag:"tls-key" flagDesc:"The fully qualified path to the TLS private key file. For HTTP over TLS (HTTPS) both a certificate and a key must be provided."`
 	NavigateMethodsByName bool        `env:"NAVIGATE_METHODS_BY_NAME" flag:"navigate-methods-by-name" flagDesc:"Should methods in the navigation be presented by type (GET, POST) or name (string)."`
+	Locale                string      `env:"LOCALE" flag:"locale" flagDesc:"Locale name. Default value "en-US"."`
 }
 
 var cfg *config
@@ -62,6 +65,7 @@ func Get() (*config, error) {
 		SiteURL:               "http://localhost:3123/",
 		ShowAssets:            false,
 		NavigateMethodsByName: true,
+		Locale:                DefaultLocale,
 	}
 
 	err := gofigure.Gofigure(cfg)

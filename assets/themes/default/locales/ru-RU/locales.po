@@ -1,0 +1,2 @@
+msgid "templates.method@request"
+msgstr "Запрос"
