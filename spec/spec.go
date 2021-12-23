@@ -749,10 +749,10 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 				if param.Description != "" {
 					// Пытаемся взять именование из описания параметра
 					param.Schema.Title = fmt.Sprintf("%s (%s)",
-						strings.TrimRight(method.Name, "."),
-						strings.TrimRight(param.Description, "."))
+						strings.TrimRight(param.Description, "."),
+						strings.TrimRight(method.Name, "."))
 				} else {
-					param.Schema.Title = fmt.Sprintf("%s (Request)",
+					param.Schema.Title = fmt.Sprintf("%s - Request",
 						strings.TrimRight(method.Name, "."))
 				}
 			}
@@ -825,10 +825,10 @@ func (c *APISpecification) buildResponse(resp *spec.Response, method *Method, ve
 				// Пытаемся взять именование из описания ответа
 				if resp.Description != "" {
 					resp.Schema.Title = fmt.Sprintf("%s (%s)",
-						strings.TrimRight(method.Name, "."),
-						strings.TrimRight(resp.Description, "."))
+						strings.TrimRight(resp.Description, "."),
+						strings.TrimRight(method.Name, "."))
 				} else {
-					resp.Schema.Title = fmt.Sprintf("%s (Response)",
+					resp.Schema.Title = fmt.Sprintf("%s - Response",
 						strings.TrimRight(method.Name, "."))
 				}
 			}
