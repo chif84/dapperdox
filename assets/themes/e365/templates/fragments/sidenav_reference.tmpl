@@ -2,10 +2,8 @@
 [: if .APIs :]
   [: range $api := .APIs :]
     <li>
-        <a id="toggle[: $api.ID :]" class="nav-toggle collapsed" data-toggle="collapse" data-target="#ul[: $api.ID :]">[: $api.Name :]</a> <!-- Add collapsed to make the open.close icon correct direction -->
+        <a id="toggle[: $api.ID :]" class="nav-toggle collapsed" data-target="#ul[: $api.ID :]" data-outer="[: $api.ID :]" href="[: $.SpecPath :]/reference/[: $api.ID :]">[: $api.Name :]</a> <!-- Add collapsed to make the open.close icon correct direction -->
         <ul class="nav collapse nav-inner" id="ul[: $api.ID :]"> <!-- add collapse to, erm, collapse! WIP! -->
-          <li><a data-outer="[: $api.ID :]" href="[: $.SpecPath :]/reference/[: $api.ID :]">Summary</a></li>
-
           [: range $method := .Methods :]
             [: if not $method.Deprecated :]
                 <li><a data-outer="[: $api.ID :]" href="[: $.SpecPath :]/reference/[: $api.ID :]/[: $method.ID :]">[: $method.NavigationName :] ([: uc $method.Method :])</a></li>
