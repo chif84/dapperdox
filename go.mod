@@ -10,6 +10,7 @@ require (
 	github.com/ian-kent/htmlform v0.0.0-20150803071533-e46316e075dd
 	github.com/justinas/alice v1.2.0
 	github.com/justinas/nosurf v1.1.1
+	github.com/leonelquinteros/gotext v1.5.0
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e
 	github.com/shurcooL/github_flavored_markdown v0.0.0-20210228213109-c3a9aa474629
 )
