@@ -19,7 +19,7 @@
   "paths": {
     "/app/{namespace}/{code}/create": {
       "post": {
-        "description": "Получение элемента Приложения по идентификатору",
+        "description": "Создание элемента Приложения",
         "produces": [
           "application/json"
         ],
@@ -79,7 +79,7 @@
     },
     "/app/{namespace}/{code}/get": {
       "get": {
-        "description": "Получение элемента Приложения по идентификатору",
+        "description": "Получение Приложения",
         "produces": [
           "application/json"
         ],
@@ -110,7 +110,7 @@
         }
       },
       "post": {
-        "description": "Получение элемента Приложения по идентификатору",
+        "description": "Получение Приложения",
         "produces": [
           "application/json"
         ],
@@ -866,11 +866,11 @@
         }
       }
     },
-    "/disk/directory/{id}/upload": {
+    "/disk/file/upload": {
       "post": {
-        "description": "Загрузка файла в папку",
+        "description": "Загрузка файла на временное хранение.\nДля загрузки необходимо сгенерировать uuid и передать его в качестве уникального хеш значения для тела файла.\nДля загрузки файла целиком передается заголовок Content-Range: 0-1000/1000 и загружается полностью.\nВозможно загрузка по частям, для этого файл должен быть разбит на равные части не меньше 5 мегабайт, кроме последней, остаток может иметь любой размер.\nОповестить сервер о том, какая из частей загружается можно заголовком Content-Range.\nЗаголовок задается по шаблону: \u003cb\u003ebytes \u003crange-start\u003e-\u003crange-end\u003e\\/\\\u003csize\u003e\u003c/b\u003e, например:\nbytes: 0-100/1000 для загрузки первой части в сто байт для файла размером 1000 байт и 101-200/1000 для загрузки второй части файла.\nДалее необходимо, инициализировать файл иначе он будет удален, как не нужный. Инициализировать файл можно, с помощью endpoint'а /disk/file/move поместив его в директорию\nили сохранить в приложении.",
         "consumes": [
-          "multipart/form-data"
+          "binary/octet-stream"
         ],
         "produces": [
           "application/json"
@@ -878,38 +878,30 @@
         "tags": [
           "disk"
         ],
-        "operationId": "diskFileUpload",
+        "summary": "Загрузка файла",
+        "operationId": "uploadPart",
         "parameters": [
           {
             "type": "string",
-            "x-go-name": "ID",
-            "description": "Идентификатор папки",
-            "name": "id",
-            "in": "path",
+            "x-go-name": "Hash",
+            "description": "хэш файла, который будет загружаться по частям",
+            "name": "hash",
+            "in": "query",
             "required": true
-          },
-          {
-            "name": "Body",
-            "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "file": {
-                  "description": "Загружаемый файл",
-                  "type": "array",
-                  "items": {
-                    "type": "integer",
-                    "format": "uint8"
-                  },
-                  "x-go-name": "File"
-                }
-              }
-            }
           }
         ],
         "responses": {
           "200": {
-            "$ref": "#/responses/DiskFileUploadResponse"
+            "description": "Файл загружен полностью"
+          },
+          "206": {
+            "description": "Часть файла загружена успешно"
+          },
+          "400": {
+            "description": "Ошибка отображается в формате сообщения, описывающего проблему. Также текст ошибки может содержать следующие коды EntityTooSmall файл разбит на слишком маленькие части, InvalidPart одна из частей не найдена в хранилище, InvalidPartOrder неверный порядок частей в файле, NoSuchUpload загрузка не найдена"
+          },
+          "default": {
+            "$ref": "#/responses/responseUploadPart"
           }
         }
       }
@@ -1451,6 +1443,24 @@
       },
       "x-go-name": "Item",
       "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/models"
+    },
+    "requestFile": {
+      "type": "object",
+      "required": [
+        "hash"
+      ],
+      "properties": {
+        "hash": {
+          "$ref": "#/definitions/UUID"
+        },
+        "name": {
+          "description": "имя файла\n\ntype: string",
+          "type": "string",
+          "x-go-name": "Name",
+          "example": "my_file.txt"
+        }
+      },
+      "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/handlers/disk-file"
     }
   },
   "responses": {
@@ -1518,7 +1528,7 @@
       }
     },
     "AppItemSetStatusResponse": {
-      "description": "Модель эелемента приложения с установленным статусом.",
+      "description": "Модель элемента приложения с установленным статусом.",
       "schema": {
         "type": "object",
         "properties": {
@@ -1704,7 +1714,7 @@
       }
     },
     "DiskFileUploadResponse": {
-      "description": "DiskFileUploadResponse ответ на запрос загрузки файла",
+      "description": "DiskFileUploadResponse ответ сервера после загрузки файла в директорию",
       "schema": {
         "type": "object",
         "properties": {
@@ -1807,6 +1817,56 @@
               "$ref": "#/definitions/appGetStatusResponseItem"
             },
             "x-go-name": "StatusItems"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "diskFilePersistToDirectoryResponse": {
+      "description": "Модель ответа загрузки файла в директорию",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "files": {
+            "description": "Файлы",
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/file"
+            },
+            "x-go-name": "Files"
+          },
+          "success": {
+            "description": "Признак успешного запроса",
+            "type": "boolean",
+            "x-go-name": "Success"
+          }
+        }
+      }
+    },
+    "responseUploadPart": {
+      "description": "Модель ответа загрузки файла.",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "description": "Текст ошибки если success == false",
+            "type": "string",
+            "x-go-name": "Error"
+          },
+          "hash": {
+            "description": "Идентификатор файла, загруженный в хранилище\n\ntype: string\nformat: uuid",
+            "type": "string",
+            "x-go-name": "Hash",
+            "example": "a35cd8de-0c73-4f6a-8218-90193d02e2e0"
           },
           "success": {
             "description": "Признак успешного запроса",
