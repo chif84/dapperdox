@@ -636,7 +636,14 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 	}
 
 	if o.Summary == "" {
+		const maxSummaryLen = 50
 		o.Summary = o.Description
+		if len(o.Description) <= maxSummaryLen {
+			o.Summary = o.Description
+		} else {
+			o.Summary = strings.SplitN(o.Description, ".", 2)[0]
+			o.Summary = strings.SplitN(o.Summary, "\n", 2)[0]
+		}
 	}
 
 	// Construct an ID for the Method. Choose from operation ID, x-operationName, summary and lastly method name.
