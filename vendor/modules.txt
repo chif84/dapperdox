@@ -13,23 +13,8 @@ github.com/aymerick/douceur/css
 github.com/aymerick/douceur/parser
 # github.com/dapperdox/dapperdox v1.2.2
 ## explicit
-github.com/dapperdox/dapperdox/config
-github.com/dapperdox/dapperdox/handlers/guides
-github.com/dapperdox/dapperdox/handlers/home
-github.com/dapperdox/dapperdox/handlers/reference
-github.com/dapperdox/dapperdox/handlers/specs
-github.com/dapperdox/dapperdox/handlers/static
-github.com/dapperdox/dapperdox/handlers/timeout
-github.com/dapperdox/dapperdox/logger
-github.com/dapperdox/dapperdox/navigation
-github.com/dapperdox/dapperdox/network
-github.com/dapperdox/dapperdox/proxy
-github.com/dapperdox/dapperdox/render
-github.com/dapperdox/dapperdox/render/asset
-github.com/dapperdox/dapperdox/spec
 # github.com/fsnotify/fsnotify v1.4.9
 ## explicit; go 1.13
-github.com/fsnotify/fsnotify
 # github.com/go-openapi/analysis v0.20.1
 ## explicit; go 1.13
 github.com/go-openapi/analysis
@@ -139,9 +124,6 @@ github.com/sourcegraph/annotate
 # github.com/sourcegraph/syntaxhighlight v0.0.0-20170531221838-bd320f5d308e
 ## explicit
 github.com/sourcegraph/syntaxhighlight
-# github.com/unrolled/render v1.4.1
-## explicit; go 1.16
-github.com/unrolled/render
 # go.mongodb.org/mongo-driver v1.7.3
 ## explicit; go 1.10
 go.mongodb.org/mongo-driver/bson
@@ -158,8 +140,6 @@ golang.org/x/net/html/atom
 golang.org/x/net/idna
 # golang.org/x/sys v0.0.0-20210525143221-35b2ab0089ea
 ## explicit; go 1.17
-golang.org/x/sys/internal/unsafeheader
-golang.org/x/sys/unix
 # golang.org/x/text v0.3.7
 ## explicit; go 1.17
 golang.org/x/text/secure/bidirule

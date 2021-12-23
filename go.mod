@@ -3,7 +3,6 @@ module dapperdox
 go 1.17
 
 require (
-	github.com/dapperdox/dapperdox v1.2.2
 	github.com/go-openapi/loads v0.21.0
 	github.com/go-openapi/spec v0.20.4
 	github.com/gorilla/pat v1.0.1
@@ -13,7 +12,6 @@ require (
 	github.com/justinas/nosurf v1.1.1
 	github.com/serenize/snaker v0.0.0-20201027110005-a7ad2135616e
 	github.com/shurcooL/github_flavored_markdown v0.0.0-20210228213109-c3a9aa474629
-	github.com/unrolled/render v1.4.1
 )
 
 require (
@@ -21,6 +19,7 @@ require (
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20200907205600-7a23bdc65eef // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/dapperdox/dapperdox v1.2.2 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/go-openapi/analysis v0.20.1 // indirect
 	github.com/go-openapi/errors v0.19.9 // indirect

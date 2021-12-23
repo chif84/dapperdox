@@ -24,18 +24,17 @@ import (
 	"net/http"
 	"strings"
 
-	//"github.com/davecgh/go-spew/spew"
 	"dapperdox/config"
 	"dapperdox/logger"
 	"dapperdox/navigation"
 	"dapperdox/render/asset"
+	unrolled "dapperdox/render/unrolled"
 	"dapperdox/spec"
 	"github.com/ian-kent/htmlform"
-	"github.com/unrolled/render"
 )
 
-// Render is a global instance of github.com/unrolled/render.Render
-var Render *render.Render
+// Render is a global instance of github.com/unrolled/render1.Render
+var Render *unrolled.Render
 
 //var guides interface{}
 type GuideType []*navigation.NavigationNode
@@ -55,9 +54,9 @@ func Register() {
 }
 
 // ----------------------------------------------------------------------------------------
-// New creates a new instance of github.com/unrolled/render.Render
-func New() *render.Render {
-	logger.Tracef(nil, "creating instance of render.Render")
+// New creates a new instance of github.com/unrolled/render1.Render
+func New() *unrolled.Render {
+	logger.Tracef(nil, "creating instance of render1.Render")
 
 	cfg, _ := config.Get()
 
@@ -90,11 +89,11 @@ func New() *render.Render {
 	// Fallback to local static directory
 	asset.Compile(cfg.DefaultAssetsDir+"/static", "assets/static")
 
-	return render.New(render.Options{
+	return unrolled.New(unrolled.Options{
 		Asset:      asset.Asset,
 		AssetNames: asset.AssetNames,
 		Directory:  "assets/templates",
-		Delims:     render.Delims{Left: "[:", Right: ":]"},
+		Delims:     unrolled.Delims{Left: "[:", Right: ":]"},
 		Layout:     "layout",
 		Funcs: []template.FuncMap{template.FuncMap{
 			"map":           htmlform.Map,
@@ -180,7 +179,7 @@ func overlay(name string, data []interface{}) template.HTML { // TODO Will be sp
 
 		r := New()
 		// data is a single item array (though I've not figured out why yet!)
-		r.HTML(writer, http.StatusOK, overlay, data[0], render.HTMLOptions{Layout: ""})
+		r.HTML(writer, http.StatusOK, overlay, data[0], unrolled.HTMLOptions{Layout: ""})
 		writer.Flush()
 	}
 
@@ -221,8 +220,8 @@ func overlayPaths(name string, datamap map[string]interface{}) []string {
 }
 
 // ----------------------------------------------------------------------------------------
-// HTML is an alias to github.com/unrolled/render.Render.HTML
-func HTML(w http.ResponseWriter, status int, name string, binding interface{}, htmlOpt ...render.HTMLOptions) {
+// HTML is an alias to github.com/unrolled/render1.Render.HTML
+func HTML(w http.ResponseWriter, status int, name string, binding interface{}, htmlOpt ...unrolled.HTMLOptions) {
 	Render.HTML(w, status, name, binding, htmlOpt...)
 }
 
