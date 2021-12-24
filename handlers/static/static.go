@@ -40,7 +40,8 @@ func Render(outPath string) error {
 	var allow bool
 
 	for _, file := range asset.AssetNames() {
-		mimeType := mime.TypeByExtension(filepath.Ext(file))
+		ext := filepath.Ext(file)
+		mimeType := mime.TypeByExtension(ext)
 
 		if mimeType == "" {
 			continue
@@ -51,7 +52,9 @@ func Render(outPath string) error {
 		switch {
 		case strings.HasPrefix(mimeType, "image"),
 			strings.HasPrefix(mimeType, "text/css"),
-			strings.HasSuffix(mimeType, "javascript"):
+			strings.HasSuffix(mimeType, "javascript"),
+			ext == ".js",
+			ext == ".css":
 			allow = true
 		default:
 			allow = false
