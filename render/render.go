@@ -230,7 +230,7 @@ func HTML(w http.ResponseWriter, status int, name string, binding interface{}, h
 }
 
 // HTMLFile renders to file on disk. Creates file and directory in needed.
-func HTMLFile(path string, name string, binding interface{}, htmlOpt ...render.HTMLOptions) error {
+func HTMLFile(path string, name string, binding interface{}, htmlOpt ...unrolled.HTMLOptions) error {
 	err := os.MkdirAll(filepath.Dir(path), 0777)
 	if err != nil {
 		return err
