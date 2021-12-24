@@ -388,7 +388,7 @@ func (c *APISpecification) Load(specLocation string, specHost string) error {
 		// If we're grouping by TAGs, then build the API at the tag level
 		if groupingByTag {
 			api = &APIGroup{
-				ID:                     TitleToKebab(name),
+				ID:                     TitleToKebab(tag.Name),
 				Name:                   name,
 				URL:                    u,
 				Info:                   &c.APIInfo,
@@ -673,7 +673,7 @@ func (c *APISpecification) processMethod(api *APIGroup, pathItem *spec.PathItem,
 	}
 
 	method := &Method{
-		ID:             CamelToKebab(id),
+		ID:             TitleToKebab(id),
 		Name:           o.Summary,
 		Description:    description,
 		Method:         methodname,
