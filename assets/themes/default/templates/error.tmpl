@@ -1,9 +1,9 @@
 <h1>[: .code :] - [: .error :]</h1>
 [: if (eq .code 404) :]
-<p>Oops! Are you sure this is the page you were looking for?</p>
+<p>[: locale "templates.error@err404" :]</p>
 [: end :]
 
 [: if (ge .code 500) :]
-<p>Oh, Sorry! Bad karma man!</p>
+<p>[: locale "templates.error@err500" :]</p>
 [: end :]
 

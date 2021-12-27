@@ -2,10 +2,10 @@
   <table class="table table-striped">
     <thead>
     <tr>
-      <th>Parameter&nbsp;name</th>
-      <th>Value</th>
-      <th>Description</th>
-      <th>Additional</th>
+      <th>[: locale "templates.fragments.reference.params@parameter_name" :]</th>
+      <th>[: locale "templates.fragments.reference.params@value" :]</th>
+      <th>[: locale "templates.fragments.reference.params@description" :]</th>
+      <th>[: locale "templates.fragments.reference.params@additional" :]</th>
     </tr>
   </thead>
   <tbody>
@@ -15,7 +15,7 @@
       <td class="type">[: join .Type " of " :][: if .CollectionFormatDescription :], [: .CollectionFormatDescription :][: end :]</td>
       <td class="hyphenate Hyphenator384hide">[: safehtml .Description :]
       [: if .Enum :]
-      <p>Possible values are:</p>
+      <p>[: locale "templates.fragments.reference.params@possible_values_are" :]</p>
       <ul class="list-bullet">
         [: range .Enum :]
         <li><code>[: . :]</code></li>
@@ -23,7 +23,7 @@
       </ul>
       [: end :]
       </td>
-      <td class="hyphenate Hyphenator384hide">[: if .Required :]Required[: end :]</td>
+      <td class="hyphenate Hyphenator384hide">[: if .Required :][: locale "templates.fragments.reference.params@required" :][: end :]</td>
     </tr>
   [: end :]
   </tbody>

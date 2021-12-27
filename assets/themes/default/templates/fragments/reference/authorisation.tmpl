@@ -1,4 +1,4 @@
-<p>This request requires the use of one of following authorisation methods:
+<p>[: locale "templates.fragments.reference.authorisation@request_requires_use_authorisation" :]
 
 [: range $name, $security := . :]
     [: if $security.Scheme.IsApiKey :]<code>API key</code>[: end :]
@@ -8,13 +8,13 @@
 [: range $name, $security := . :]
     [: if $security.Scheme.IsOAuth2 :]
         [: if $security.Scopes :]
-          <p>For OAuth 2 authorisation, the following scopes are required:</p>
+          <p>[: locale "templates.fragments.reference.authorisation@oauth_authorisation_required" :]</p>
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
-                <th>Scope</th>
-                <th>Description</th>
+                <th>[: locale "templates.fragments.reference.authorisation@scope" :]</th>
+                <th>[: locale "templates.fragments.reference.authorisation@description" :]</th>
                 </tr>
               </thead>
               <tbody>

@@ -1,2 +1,140 @@
 msgid "templates.method@request"
 msgstr "Request"
+
+msgid "templates.method@path_parameters"
+msgstr "Path parameters"
+
+msgid "templates.method@form_parameters"
+msgstr "Form parameters"
+
+msgid "templates.method@query_parameters"
+msgstr "Query parameters"
+
+msgid "templates.method@request_headers"
+msgstr "Request headers"
+
+msgid "templates.method@request_body"
+msgstr "Request body"
+
+msgid "templates.method@authorisation"
+msgstr "Authorisation"
+
+msgid "templates.method@response"
+msgstr "Response"
+
+msgid "templates.method@response_description"
+msgstr "The following HTTP status codes may be returned."
+
+msgid "templates.method@status_code"
+msgstr "Status code"
+
+msgid "templates.method@description"
+msgstr "Description"
+
+msgid "templates.method@resource"
+msgstr "Resource"
+
+msgid "templates.resource@example"
+msgstr "Example"
+
+msgid "templates.resource@methods"
+msgstr "Methods"
+
+msgid "templates.fragments.sidenav_reference@summary"
+msgstr "Summary"
+
+msgid "templates.fragments.sidenav_reference@other_versions"
+msgstr "Other versions"
+
+msgid "templates.fragments.sidenav_specification@openapi_specification"
+msgstr "OpenAPI specification"
+
+msgid "templates.fragments.sidenav_specification@download"
+msgstr "Download"
+
+msgid "templates.fragments.reference.api-body@description"
+msgstr "Description"
+
+msgid "templates.fragments.reference.api-body@http_request"
+msgstr "HTTP Request"
+
+msgid "templates.fragments.reference.resource_body@properties"
+msgstr "Properties"
+
+msgid "templates.fragments.reference.resource_body@resource"
+msgstr "Resource"
+
+msgid "templates.fragments.reference.properties@possible_values_are"
+msgstr "Possible values are:"
+
+msgid "templates.fragments.reference.properties@optional"
+msgstr "Optional."
+
+msgid "templates.fragments.reference.properties@read_only"
+msgstr "Read only."
+
+msgid "templates.fragments.reference.params@possible_values_are"
+msgstr "Possible values are:"
+
+msgid "templates.fragments.reference.params@parameter_name"
+msgstr "Parameter name"
+
+msgid "templates.fragments.reference.params@value"
+msgstr "Value"
+
+msgid "templates.fragments.reference.params@description"
+msgstr "Description"
+
+msgid "templates.fragments.reference.params@additional"
+msgstr "Additional"
+
+msgid "templates.fragments.reference.params@required"
+msgstr "Required"
+
+msgid "templates.fragments.reference.request_body@request_body_takes_array"
+msgstr "The request body takes an array of resource"
+
+msgid "templates.fragments.reference.request_body@request_body_takes"
+msgstr "The request body takes a complete resource"
+
+msgid "templates.fragments.reference.request_body@containing_properties"
+msgstr "Containing the following writable properties:"
+
+msgid "templates.fragments.reference.resource_table@name"
+msgstr "Name"
+
+msgid "templates.fragments.reference.resource_table@type"
+msgstr "Type"
+
+msgid "templates.fragments.reference.resource_table@description"
+msgstr "Description"
+
+msgid "templates.fragments.reference.resource_table@additional"
+msgstr "Additional"
+
+msgid "templates.fragments.reference.response_headers@name"
+msgstr "Name"
+
+msgid "templates.fragments.reference.response_headers@type"
+msgstr "Type"
+
+msgid "templates.fragments.reference.response_headers@description"
+msgstr "Description"
+
+msgid "templates.fragments.reference.authorisation@request_requires_use_authorisation"
+msgstr "This request requires the use of one of following authorisation methods:"
+
+msgid "templates.fragments.reference.authorisation@oauth_authorisation_required"
+msgstr "For OAuth 2 authorisation, the following scopes are required:"
+
+msgid "templates.fragments.reference.authorisation@scope"
+msgstr "Scope"
+
+msgid "templates.fragments.reference.authorisation@description"
+msgstr "Description"
+
+msgid "templates.error@err404"
+msgstr "404. The requested page was not found on this server."
+
+msgid "templates.error@err500"
+msgstr "500. The server encountered an error and could not complete your request."

@@ -1,9 +1,9 @@
 [: if .Method.BodyParam.IsArray :]
-    <p>The request body takes an array of
-    <a href="[: $.SpecPath :]/resources/[: .Method.BodyParam.Resource.ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: .Method.BodyParam.Resource.Title :] resources</a>, containing the following writable properties:</p>
+    <p>[: locale "templates.fragments.reference.request_body@request_body_takes_array" :]&nbsp;
+    <a href="[: $.SpecPath :]/resources/[: .Method.BodyParam.Resource.ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: .Method.BodyParam.Resource.Title :]</a>. [: locale "templates.fragments.reference.request_body@containing_properties" :]</p>
 [: else :]
-    <p>The request body takes a complete
-    <a href="[: $.SpecPath :]/resources/[: .Method.BodyParam.Resource.ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: .Method.BodyParam.Resource.Title :] resource</a>, containing the following writable properties:</p>
+    <p>[: locale "templates.fragments.reference.request_body@request_body_takes" :]&nbsp;
+    <a href="[: $.SpecPath :]/resources/[: .Method.BodyParam.Resource.ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: .Method.BodyParam.Resource.Title :]</a>. [: locale "templates.fragments.reference.request_body@containing_properties" :]</p>
 [: end :]
 
 <pre><code>[: .Method.BodyParam.Resource.Schema :]</code></pre>

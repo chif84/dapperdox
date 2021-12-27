@@ -12,54 +12,54 @@
 [: overlay "request" . :]
 
 [: if .Method.PathParams :]
-  <h2 class="sub-header">Path parameters</h2>
+  <h2 class="sub-header">[: locale "templates.method@path_parameters" :]</h2>
   [: overlay "path-parameters" . :]
   [: template "fragments/reference/params" .Method.PathParams :]
 [: end :]
 
 [: if .Method.QueryParams :]
-  <h2 class="sub-header">Query parameters</h2>
+  <h2 class="sub-header">[: locale "templates.method@query_parameters" :]</h2>
   [: overlay "query-parameters" . :]
   [: template "fragments/reference/params" .Method.QueryParams :]
 [: end :]
 
 [: if .Method.HeaderParams :]
-  <h2 class="sub-header">Request headers</h2>
+  <h2 class="sub-header">[: locale "templates.method@request_headers" :]</h2>
   [: overlay "request-headers" . :]
   [: template "fragments/reference/params" .Method.HeaderParams :]
 [: end :]
 
 [: if .Method.FormParams :]
-  <h2 class="sub-header">Form parameters</h2>
+  <h2 class="sub-header">[: locale "templates.method@form_parameters" :]</h2>
   [: overlay "form-parameters" . :]
   [: template "fragments/reference/params" .Method.FormParams :]
 [: end :]
 
 [: if .Method.BodyParam :]
-  <h2 class="sub-header">Request body</h2>
+  <h2 class="sub-header">[: locale "templates.method@request_body" :]</h2>
   [: overlay "request-body" . :]
   [: template "fragments/reference/request_body" . :]
 [: end :]
 [: overlay "request-end" . :]
 
 [: if .Method.Security :]
-  <h2 class="sub-header">Authorisation</h2>
+  <h2 class="sub-header">[: locale "templates.method@authorisation" :]</h2>
   [: overlay "security" . :]
   [: template "fragments/reference/authorisation" .Method.Security :]
   [: overlay "security-end" . :]
 [: end :]
 
-<h2 class="sub-header">Response</h2>
+<h2 class="sub-header">[: locale "templates.method@response" :]</h2>
 [: overlay "response" . :]
-<p>The following HTTP status codes may be returned, optionally with a response resource.</p>
+<p>[: locale "templates.method@response_description" :]</p>
 
 <div class="table-responsive">
   <table class="table table-striped">
     <thead>
       <tr>
-      <th>Status&nbsp;code</th>
-      <th>Description</th>
-      <th>Resource</th>
+      <th>[: locale "templates.method@status_code" :]</th>
+      <th>[: locale "templates.method@description" :]</th>
+      <th>[: locale "templates.method@resource" :]</th>
       </tr>
     </thead>
     <tbody>

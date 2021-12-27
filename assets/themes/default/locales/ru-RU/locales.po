@@ -1,2 +1,142 @@
 msgid "templates.method@request"
 msgstr "Запрос"
+
+msgid "templates.method@path_parameters"
+msgstr "Параметры пути"
+
+msgid "templates.method@form_parameters"
+msgstr "Параметры формы"
+
+msgid "templates.method@query_parameters"
+msgstr "Параметры запроса"
+
+msgid "templates.method@request_headers"
+msgstr "Заголовки запроса"
+
+msgid "templates.method@request_body"
+msgstr "Тело запроса"
+
+msgid "templates.method@authorisation"
+msgstr "Авторизация"
+
+msgid "templates.method@response"
+msgstr "Ответ"
+
+msgid "templates.method@response_description"
+msgstr "Могут быть возвращены следующие коды состояния HTTP."
+
+msgid "templates.method@status_code"
+msgstr "HTTP статус"
+
+msgid "templates.method@description"
+msgstr "Описание"
+
+msgid "templates.method@resource"
+msgstr "Модель ответа"
+
+msgid "templates.resource@example"
+msgstr "Пример"
+
+msgid "templates.resource@methods"
+msgstr "Методы"
+
+msgid "templates.fragments.sidenav_reference@summary"
+msgstr "Обзор"
+
+msgid "templates.fragments.sidenav_reference@other_versions"
+msgstr "Другие версии"
+
+
+msgid "templates.fragments.sidenav_specification@openapi_specification"
+msgstr "Спецификация OpenAPI"
+
+msgid "templates.fragments.sidenav_specification@download"
+msgstr "Скачать"
+
+msgid "templates.fragments.reference.api-body@description"
+msgstr "Описание"
+
+msgid "templates.fragments.reference.api-body@http_request"
+msgstr "HTTP запрос"
+
+msgid "templates.fragments.reference.resource_body@properties"
+msgstr "Свойства"
+
+msgid "templates.fragments.reference.resource_body@resource"
+msgstr "Ресурс"
+
+msgid "templates.fragments.reference.properties@possible_values_are"
+msgstr "Возможные значения:"
+
+msgid "templates.fragments.reference.properties@optional"
+msgstr "Опционально."
+
+msgid "templates.fragments.reference.properties@read_only"
+msgstr "Только для чтения."
+
+msgid "templates.fragments.reference.params@possible_values_are"
+msgstr "Возможные значения:"
+
+msgid "templates.fragments.reference.params@parameter_name"
+msgstr "Имя параметра"
+
+msgid "templates.fragments.reference.params@value"
+msgstr "Тип"
+
+msgid "templates.fragments.reference.params@description"
+msgstr "Описание"
+
+msgid "templates.fragments.reference.params@additional"
+msgstr "Дополнительно"
+
+msgid "templates.fragments.reference.params@required"
+msgstr "Обязательный"
+
+msgid "templates.fragments.reference.request_body@request_body_takes_array"
+msgstr "Тело запроса принимает массив ресурса"
+
+msgid "templates.fragments.reference.request_body@request_body_takes"
+msgstr "Тело запроса принимает массив ресурс"
+
+msgid "templates.fragments.reference.request_body@containing_properties"
+msgstr "Содержит следующие доступные для записи свойства:"
+
+
+msgid "templates.fragments.reference.resource_table@name"
+msgstr "Имя"
+
+msgid "templates.fragments.reference.resource_table@type"
+msgstr "Тип"
+
+msgid "templates.fragments.reference.resource_table@description"
+msgstr "Описание"
+
+msgid "templates.fragments.reference.resource_table@additional"
+msgstr "Дополнительно"
+
+msgid "templates.fragments.reference.response_headers@name"
+msgstr "Имя"
+
+msgid "templates.fragments.reference.response_headers@type"
+msgstr "Тип"
+
+msgid "templates.fragments.reference.response_headers@description"
+msgstr "Описание"
+
+msgid "templates.fragments.reference.authorisation@request_requires_use_authorisation"
+msgstr "Запрос обязательно должен использовать один из следующих методов авторизации:"
+
+msgid "templates.fragments.reference.authorisation@oauth_authorisation_required"
+msgstr "Для авторизации OAuth 2 требуются следующие области видимости:"
+
+msgid "templates.fragments.reference.authorisation@scope"
+msgstr "Облась видимости"
+
+msgid "templates.fragments.reference.authorisation@description"
+msgstr "Описание"
+
+msgid "templates.error@err404"
+msgstr "404. Запрашиваемая страница не найдена на сервере."
+
+msgid "templates.error@err500"
+msgstr "500. Сервер обнаружил ошибку и не смог выполнить ваш запрос."

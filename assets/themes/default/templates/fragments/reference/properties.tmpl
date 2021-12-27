@@ -8,7 +8,7 @@
     <td>
       [: safehtml $property.Description :]
       [: if $property.Enum :]
-      <p>Possible values are:</p>
+      <p>[: locale "templates.fragments.reference.properties@possible_values_are" :]</p>
       <ul class="list-bullet">
         [: range $property.Enum :]
         <li><code>[: . :]</code></li>
@@ -16,8 +16,8 @@
       </ul>
       [: end :]
     </td>
-    <td>[: if not $property.Required :]Optional[: if $property.ReadOnly :], read only.[: end :]
-        [: else :][: if $property.ReadOnly :]Read only.[: end :][: end :]</td>
+    <td>[: if not $property.Required :][: locale "templates.fragments.reference.properties@optional" :][: if $property.ReadOnly :][: locale "templates.fragments.reference.properties@read_only" :][: end :]
+        [: else :][: if $property.ReadOnly :][: locale "templates.fragments.reference.properties@read_only" :][: end :][: end :]</td>
   </tr>
   [: template "fragments/reference/properties" $property :]
 [: end :]
