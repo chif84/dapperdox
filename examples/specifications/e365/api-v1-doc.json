@@ -118,6 +118,7 @@
           "app"
         ],
         "operationId": "appGet",
+        "deprecated": true,
         "parameters": [
           {
             "type": "string",
@@ -362,6 +363,7 @@
           "app"
         ],
         "operationId": "appItemGet",
+        "deprecated": true,
         "parameters": [
           {
             "type": "string",
@@ -744,6 +746,7 @@
           "bpm"
         ],
         "operationId": "bpmInstanceGet",
+        "deprecated": true,
         "parameters": [
           {
             "type": "string",
@@ -866,6 +869,128 @@
         }
       }
     },
+    "/disk/directory/{ID}/upload": {
+      "post": {
+        "description": "Загрузка файла в директорию, которая указана в идентификаторе.\nВ результате файл будет перемещен в нужную директорию, для этого должно хватать места на диске.\nЕсли в директории уже есть файл с подобным именем, к имени будет добавлен постфикс в виде цифры - (1) и тд.\nДля загрузки необходимо сгенерировать uuid и передать его в качестве уникального хеш значения для тела файла.\nДля загрузки файла целиком передается заголовок Content-Range: 0-1000/1000 и загружается полностью.\nВозможно загрузка по частям, для этого файл должен быть разбит на равные части не меньше 5 мегабайт,\nкроме последней, остаток может иметь любой размер.\nОповестить сервер о том, какая из частей загружается можно заголовком Content-Range.\nЗаголовок задается по шаблону: \u003cb\u003ebytes \u003crange-start\u003e-\u003crange-end\u003e\\/\\\u003csize\u003e\u003c/b\u003e, например:\nbytes: 0-100/1000 для загрузки первой части в сто байт для файла размером 1000 байт и 101-200/1000\nдля загрузки второй части файла.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "disk"
+        ],
+        "summary": "Загрузка файла в директорию",
+        "operationId": "uploadToDirectory",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Идентификатор папки",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Идентификатор тела файла",
+            "name": "Hash",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "File": {
+                  "description": "Загружаемый файл",
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "format": "uint8"
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Файл загружен полностью"
+          },
+          "206": {
+            "description": "Часть файла загружена успешно"
+          },
+          "400": {
+            "description": "Ошибка отображается в формате сообщения, описывающего проблему. Также текст ошибки может содержать следующие коды EntityTooSmall файл разбит на слишком маленькие части, InvalidPart одна из частей не найдена в хранилище, InvalidPartOrder неверный порядок частей в файле, NoSuchUpload загрузка не найдена"
+          },
+          "402": {
+            "description": "на диске закончилось место"
+          },
+          "403": {
+            "description": "доступ для создания файла запрещен"
+          },
+          "default": {
+            "$ref": "#/responses/DiskFileUploadResponse"
+          }
+        }
+      }
+    },
+    "/disk/file/move": {
+      "post": {
+        "description": "В случае если файл загружен, но не инициализирован, выполняется сохранение файла в директорию с указанным именем.\nЕсли в директории уже есть файл с подобным именем, к имени будет добавлен постфикс в виде цифры - (1) и тд.\nДля инициализированных файлов выполняется перенос в новую директорию.",
+        "tags": [
+          "disk"
+        ],
+        "summary": "Загрузка файла в директорию",
+        "operationId": "persistOrMoveFileToDirectory",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Идентификатор папки в которую перемещается файл",
+            "name": "DirectoryID",
+            "in": "query",
+            "required": true
+          },
+          {
+            "name": "Body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "files": {
+                  "description": "Файлы, которые необходимо переместить",
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/requestFile"
+                  },
+                  "x-go-name": "Files"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "операция удачно завершена"
+          },
+          "402": {
+            "description": "на диске закончилось место"
+          },
+          "403": {
+            "description": "доступ для создания файла запрещен"
+          },
+          "409": {
+            "description": "невозможно создать уникальное имя для файла"
+          },
+          "default": {
+            "$ref": "#/responses/diskFilePersistToDirectoryResponse"
+          }
+        }
+      }
+    },
     "/disk/file/upload": {
       "post": {
         "description": "Загрузка файла на временное хранение.\nДля загрузки необходимо сгенерировать uuid и передать его в качестве уникального хеш значения для тела файла.\nДля загрузки файла целиком передается заголовок Content-Range: 0-1000/1000 и загружается полностью.\nВозможно загрузка по частям, для этого файл должен быть разбит на равные части не меньше 5 мегабайт, кроме последней, остаток может иметь любой размер.\nОповестить сервер о том, какая из частей загружается можно заголовком Content-Range.\nЗаголовок задается по шаблону: \u003cb\u003ebytes \u003crange-start\u003e-\u003crange-end\u003e\\/\\\u003csize\u003e\u003c/b\u003e, например:\nbytes: 0-100/1000 для загрузки первой части в сто байт для файла размером 1000 байт и 101-200/1000 для загрузки второй части файла.\nДалее необходимо, инициализировать файл иначе он будет удален, как не нужный. Инициализировать файл можно, с помощью endpoint'а /disk/file/move поместив его в директорию\nили сохранить в приложении.",
@@ -898,7 +1023,7 @@
             "description": "Часть файла загружена успешно"
           },
           "400": {
-            "description": "Ошибка отображается в формате сообщения, описывающего проблему. Также текст ошибки может содержать следующие коды EntityTooSmall файл разбит на слишком маленькие части, InvalidPart одна из частей не найдена в хранилище, InvalidPartOrder неверный порядок частей в файле, NoSuchUpload загрузка не найдена"
+            "description": "Ошибка отображается в формате сообщения, описывающего проблему. Также текст ошибки может содержать следующие коды \u003ci\u003eEntityTooSmall\u003c/\u003e файл разбит на слишком маленькие части, \u003ci\u003eInvalidPart\u003c/i\u003e одна из частей не найдена в хранилище, \u003ci\u003eInvalidPartOrder\u003c/i\u003e неверный порядок частей в файле, \u003ci\u003eNoSuchUpload\u003c/i\u003e загрузка не найдена"
           },
           "default": {
             "$ref": "#/responses/responseUploadPart"
@@ -941,6 +1066,7 @@
           "disk"
         ],
         "operationId": "handlerGetLink",
+        "deprecated": true,
         "parameters": [
           {
             "type": "string",
@@ -973,15 +1099,40 @@
       }
     },
     "/user/list": {
-      "post": {
-        "description": "Получение ссылки на скачивание файла по идентификатору файла",
+      "get": {
+        "description": "Получение списка пользователей согласно условиям фильтрации.\nУсловия передаются в виде JSON-сериализованного объекта в параметре listparams.",
         "produces": [
           "application/json"
         ],
         "tags": [
           "user"
         ],
-        "operationId": "user",
+        "summary": "Получение списка пользователей",
+        "operationId": "userListGET",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Параметры фильтрации",
+            "name": "listparams",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ListUserResponse"
+          }
+        }
+      },
+      "post": {
+        "description": "Получение списка пользователей",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "user"
+        ],
+        "operationId": "userListPOST",
+        "deprecated": true,
         "parameters": [
           {
             "name": "Body",
@@ -1456,8 +1607,7 @@
         "name": {
           "description": "имя файла\n\ntype: string",
           "type": "string",
-          "x-go-name": "Name",
-          "example": "my_file.txt"
+          "x-go-name": "Name"
         }
       },
       "x-go-package": "git.elewise.com/elma365/main/internal/api/v1/handlers/disk-file"
@@ -1714,7 +1864,7 @@
       }
     },
     "DiskFileUploadResponse": {
-      "description": "DiskFileUploadResponse ответ сервера после загрузки файла в директорию",
+      "description": "ответ сервера после загрузки файла в директорию",
       "schema": {
         "type": "object",
         "properties": {
@@ -1827,7 +1977,7 @@
       }
     },
     "diskFilePersistToDirectoryResponse": {
-      "description": "Модель ответа загрузки файла в директорию",
+      "description": "ответ сервера, при перемещении файла в папку",
       "schema": {
         "type": "object",
         "properties": {
@@ -1853,7 +2003,7 @@
       }
     },
     "responseUploadPart": {
-      "description": "Модель ответа загрузки файла.",
+      "description": "ответ после загрузки одной из частей файла",
       "schema": {
         "type": "object",
         "properties": {
