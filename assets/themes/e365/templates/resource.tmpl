@@ -9,7 +9,7 @@
 
 <ul class="">
   [: range .Resource.Methods :]
-    <li><a href="[: $.SpecPath :]/reference/[: .APIGroup.ID :]/[: .ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: .Method :]</a> - [: .Name :]</li>
+    <li><a href="[: $.SpecPath :]/reference/[: .APIGroup.ID :]/[: .ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: uc .Method :]</a> - [: .Name :]</li>
   [: end :]
 </ul>
 

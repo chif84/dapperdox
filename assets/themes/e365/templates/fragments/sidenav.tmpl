@@ -2,6 +2,9 @@
 $(document).ready(function(){
     $('.items').hide();
     var $pagename=decodeURI( window.location.pathname );
+    if ($pagename.endsWith('/')) {
+        $pagename = $pagename.substr(0, $pagename.length - 1);
+    }
 
     var $parent=$('ul[id="navigation"]');
     var $element=$parent.find('a[href$="'+$pagename+'"]');

@@ -2,6 +2,7 @@
   <table class="table table-striped">
     <thead>
       <tr>
+        <th>[: locale "templates.fragments.reference.api-body@operation" :]</th>
         <th>[: locale "templates.fragments.reference.api-body@http_request" :]</th>
         <th>[: locale "templates.fragments.reference.api-body@description" :]</th>
       </tr>
@@ -10,7 +11,10 @@
     [: range .Methods :]
     <tr>
       <td>
-        <pre>[: uc .Method :]&nbsp;[: .Path :]</pre></td>
+        <a id="[: .ID :]" href="[:$.SpecPath:]/reference/[: $.API.ID :]/[: .ID :][: if $.Version :]?v=[: $.Version :][: end :]">[: uc .OperationName :]</a>
+      </td>
+      <td>
+        <pre>[: .Path :]</pre>
       </td>
       <td class="hyphenate Hyphenator600hide">
         [: .Name :]

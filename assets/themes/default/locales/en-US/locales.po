@@ -55,6 +55,9 @@ msgstr "Download"
 msgid "templates.fragments.reference.api-body@description"
 msgstr "Description"
 
+msgid "templates.fragments.reference.api-body@operation"
+msgstr "Operation"
+
 msgid "templates.fragments.reference.api-body@http_request"
 msgstr "HTTP Request"
 
