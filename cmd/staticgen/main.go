@@ -94,6 +94,7 @@ func main() {
 	specs.Register(router)
 
 	spec.LoadStatusCodes()
+	spec.LoadLocales()
 
 	err = spec.LoadSpecifications(cfg.BindAddr, true)
 	if err != nil {
